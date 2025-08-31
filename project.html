@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片生成器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f3f4f6;
+            padding: 1rem;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #fff;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .text-area {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 2px solid #e5e7eb;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 1rem;
+        }
+        .image-container {
+            margin-top: 1.5rem;
+            min-height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9fafb;
+            border: 2px dashed #d1d5db;
+            border-radius: 0.75rem;
+            position: relative;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 0.5rem;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .placeholder-text {
+            color: #6b7280;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<div class="container">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">AI 圖片生成器</h1>
+    <p class="text-gray-500 mb-6">輸入您的生成詞，體驗 AI 圖片生成</p>
+
+    <div class="flex flex-col md:flex-row gap-4">
+        <textarea id="promptInput" class="text-area" placeholder="請輸入生成詞，例如：七龍珠, 人造人 18 號, 動漫風格...">七龍珠, 人造人 18 號, Android 18, 金髮, 藍色短外套, 黑色背心, 黑色長褲, 白色橫條紋, 交叉雙手, 站姿, 自信的表情, 2D 動漫風格, 電玩遊戲畫風, 白色背景, 高畫質</textarea>
+        <button id="generateBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+            生成圖片
+        </button>
+    </div>
+
+    <div id="imageDisplay" class="image-container">
+        <div class="placeholder-text">圖片將顯示在這裡</div>
+    </div>
+</div>
+
+<script>
+    const promptInput = document.getElementById('promptInput');
+    const generateBtn = document.getElementById('generateBtn');
+    const imageDisplay = document.getElementById('imageDisplay');
+    const placeholderText = document.querySelector('.placeholder-text');
+
+    const generateImage = async (prompt) => {
+        imageDisplay.innerHTML = `<div class="loading-spinner"></div>`;
+        placeholderText.style.display = 'none';
+
+        const payload = {
+            contents: [{
+                parts: [{ text: prompt }]
+            }],
+            generationConfig: {
+                responseModalities: ['TEXT', 'IMAGE']
+            },
+        };
+
+        const apiKey = "";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
+
+        let retries = 0;
+        const maxRetries = 5;
+        let response;
+
+        while (retries < maxRetries) {
+            try {
+                response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    break;
+                } else if (response.status === 429) {
+                    const delay = Math.pow(2, retries) * 1000;
+                    console.warn(`Too many requests. Retrying in ${delay / 1000} seconds...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    retries++;
+                } else {
+                    const error = await response.json();
+                    console.error('API Error:', error);
+                    imageDisplay.innerHTML = `<p class="text-red-500 text-lg">生成圖片失敗，請稍後再試。</p>`;
+                    return;
+                }
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                imageDisplay.innerHTML = `<p class="text-red-500 text-lg">網路連線或 API 請求發生錯誤。</p>`;
+                return;
+            }
+        }
+
+        if (!response || !response.ok) {
+            imageDisplay.innerHTML = `<p class="text-red-500 text-lg">已達最大重試次數，無法生成圖片。</p>`;
+            return;
+        }
+
+        const result = await response.json();
+        const base64Data = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+
+        if (base64Data) {
+            const imageUrl = `data:image/png;base64,${base64Data}`;
+            imageDisplay.innerHTML = `<img src="${imageUrl}" alt="Generated Image">`;
+        } else {
+            imageDisplay.innerHTML = `<p class="text-red-500 text-lg">無法從回應中取得圖片資料。</p>`;
+        }
+    };
+
+    generateBtn.addEventListener('click', () => {
+        const prompt = promptInput.value.trim();
+        if (prompt) {
+            generateImage(prompt);
+        }
+    });
+
+    // Initial prompt generation
+    window.onload = function() {
+        const initialPrompt = promptInput.value.trim();
+        if (initialPrompt) {
+            generateImage(initialPrompt);
+        }
+    }
+</script>
+
+</body>
+</html>
