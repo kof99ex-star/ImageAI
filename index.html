@@ -97,7 +97,9 @@
 
     const generateImage = async (prompt) => {
         imageDisplay.innerHTML = `<div class="loading-spinner"></div>`;
-        placeholderText.style.display = 'none';
+        if (placeholderText) {
+          placeholderText.style.display = 'none';
+        }
 
         const payload = {
             contents: [{
@@ -155,7 +157,7 @@
             const imageUrl = `data:image/png;base64,${base64Data}`;
             imageDisplay.innerHTML = `<img src="${imageUrl}" alt="Generated Image">`;
         } else {
-            imageDisplay.innerHTML = `<p class="text-red-500 text-lg">無法從回應中取得圖片資料。</p>`;
+            imageDisplay.innerHTML = `<p class="text-red-500 text-lg">無法從回應中取得圖片資料，請檢查您的生成詞是否恰當。</p>`;
         }
     };
 
