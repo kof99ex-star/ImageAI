@@ -1,181 +1,270 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>圖片生成器</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f3f4f6;
-            padding: 1rem;
-        }
-        .container {
-            max-width: 900px;
-            width: 100%;
-            background-color: #fff;
-            padding: 2.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .text-area {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: 2px solid #e5e7eb;
-            font-size: 1rem;
-            resize: vertical;
-            min-height: 80px;
-            margin-bottom: 1rem;
-        }
-        .image-container {
-            margin-top: 1.5rem;
-            min-height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f9fafb;
-            border: 2px dashed #d1d5db;
-            border-radius: 0.75rem;
-            position: relative;
-            overflow: hidden;
-            flex-direction: column;
-        }
-        .image-container img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 0.5rem;
-        }
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3b82f6;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .placeholder-text {
-            color: #6b7280;
-            font-size: 1.25rem;
-            text-align: center;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>觀音山・安心同行島</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF2EF;--ink:#23332E;--mut:#5C6B65;--card:#fff;--line:#CBD6D0;--gold:#B8892F;--green:#2F5D4E;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C19;--ink:#E4ECE7;--mut:#9DB0A7;--card:#1D2824;--line:#34443E;--gold:#D9AE5A;--green:#7FB5A0}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.7 "Noto Sans TC",system-ui,sans-serif}
+h1,h2,h3{font-family:"Noto Serif TC",serif;margin:0}
+header{max-width:1100px;margin:0 auto;padding:28px 20px 12px;display:grid;gap:14px}
+h1{font-size:clamp(26px,5vw,40px);font-weight:700;letter-spacing:.08em}
+.sub{color:var(--mut);margin:0}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.search{flex:1 1 260px;position:relative}
+.search input{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
+.res{position:absolute;left:0;right:0;top:100%;margin-top:6px;background:var(--card);border:1px solid var(--line);border-radius:10px;max-height:300px;overflow:auto;z-index:20;display:none}
+.res button{display:block;width:100%;text-align:left;padding:10px 14px;border:0;background:none;color:inherit;font:inherit;cursor:pointer;border-bottom:1px solid var(--line)}
+.res button:hover,.res button:focus{background:var(--bg)}
+.res small{color:var(--mut);margin-left:8px}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:none;color:var(--ink);padding:10px 14px;font:inherit;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--green);color:#fff}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+main{max-width:1100px;margin:0 auto;padding:0 20px 60px}
+.stage{border-radius:18px;overflow:hidden;border:1px solid var(--line);position:relative;height:min(72vh,580px);background:#BFE0EE}
+#c{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#ov{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.dock{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:4px;padding:5px;border-radius:999px;background:var(--card);box-shadow:0 6px 22px rgba(0,0,0,.25);max-width:calc(100% - 16px);overflow-x:auto}
+.dock button{border:0;background:none;color:var(--ink);border-radius:999px;padding:8px 13px;font:inherit;font-size:14px;white-space:nowrap;cursor:pointer}
+.dock button:hover{background:var(--bg)}
+.dock button[aria-pressed=true]{background:var(--green);color:#fff}
+.tpn{position:absolute;left:50%;bottom:66px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:10px 16px;box-shadow:0 6px 22px rgba(0,0,0,.25);width:min(460px,calc(100% - 24px))}
+.tpn>div{flex:1}.tpn input{width:100%;accent-color:var(--green)}
+.tk{display:flex;justify-content:space-between;font-size:11px;color:var(--mut)}
+.tpn b{font-variant-numeric:tabular-nums;min-width:46px;text-align:right}
+#pl{width:36px;height:36px;flex:none;border-radius:50%;border:0;background:var(--green);color:#fff;cursor:pointer}
+.hp{position:absolute;right:12px;top:12px;max-width:230px;background:var(--card);border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.6;box-shadow:0 6px 22px rgba(0,0,0,.25)}
+.tpn[hidden],.hp[hidden]{display:none}
+.nonames .hs span{font:500 13px "Noto Sans TC",sans-serif;color:#23332E;background:rgba(255,255,255,.94);border-radius:999px;padding:2px 10px;box-shadow:0 2px 8px rgba(0,0,0,.3);white-space:nowrap}
+.hs{position:absolute;transform:translate(-50%,-50%);border:0;background:none;padding:0;pointer-events:auto;cursor:pointer;display:flex;flex-direction:column-reverse;align-items:center;gap:3px}
+.hs i{width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--gold);animation:p 2.4s infinite}
+.hs span{font:500 13px "Noto Sans TC",sans-serif;color:#fff;text-shadow:0 0 3px #1d2b26,0 0 3px #1d2b26,0 0 5px #1d2b26;white-space:nowrap}
+.hs:hover i,.hs.on i,.hs:focus-visible i{background:var(--gold)}
+@keyframes p{0%{box-shadow:0 0 0 0 rgba(184,137,47,.7)}70%,100%{box-shadow:0 0 0 12px rgba(184,137,47,0)}}
+@media(prefers-reduced-motion:reduce){.hs i{animation:none}}
+h2.t{font-size:22px;margin:40px 0 4px}
+.themes{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:16px}
+.th{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;border-top:4px solid var(--gold)}
+.th h3{font-size:18px;margin-bottom:10px}
+.th ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.th li button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 13px;font:inherit;font-size:14px;cursor:pointer}
+.th li button:hover{border-color:var(--green)}
+aside{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--card);border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(0,0,0,.18);transform:translateX(105%);transition:transform .3s;z-index:30;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));overflow:auto}
+aside.open{transform:none}
+@media(max-width:700px){aside{top:auto;width:100%;max-height:78vh;border-left:0;border-top:1px solid var(--line);border-radius:18px 18px 0 0;transform:translateY(105%)}}
+@media(prefers-reduced-motion:reduce){aside{transition:none}}
+aside h2{font-size:24px;margin:6px 0 4px}
+.tag{color:var(--green);font-size:14px}
+.ph{height:150px;border-radius:12px;margin:14px 0;background:linear-gradient(135deg,var(--green),var(--gold));opacity:.85;display:flex;align-items:end;padding:10px 12px;color:#fff;font-size:13px}
+.x{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:16px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer}
+.cta{display:inline-block;margin-top:8px;padding:11px 18px;border-radius:10px;background:var(--green);color:#fff;border:0;font:inherit;cursor:pointer}
+.cta.alt{background:none;color:var(--green);border:1px solid var(--green);margin-left:8px}
+footer{max-width:1100px;margin:0 auto;padding:0 20px 40px;color:var(--mut);font-size:14px}
+</style>
 </head>
-<body class="bg-gray-100">
-
-<div class="container">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">AI 圖片生成器</h1>
-    <p class="text-gray-500 mb-6">輸入您的生成詞，體驗 AI 圖片生成</p>
-
-    <div class="flex flex-col md:flex-row gap-4">
-        <textarea id="promptInput" class="text-area" placeholder="請輸入生成詞，例如：七龍珠, 人造人 18 號, 動漫風格...">七龍珠, 人造人 18 號, Android 18, 金髮, 藍色短外套, 黑色背心, 黑色長褲, 白色橫條紋, 交叉雙手, 站姿, 自信的表情, 2D 動漫風格, 電玩遊戲畫風, 白色背景, 高畫質</textarea>
-        <button id="generateBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
-            生成圖片
-        </button>
+<body>
+<header>
+  <div>
+    <h1>觀音山・安心同行島</h1>
+    <p class="sub">把思念，串起來。無論身在何處，都能走進園區的每一個角落。</p>
+  </div>
+  <div class="bar">
+    <div class="search">
+      <input id="q" type="search" placeholder="搜尋：法會、停車、廁所、開放時間…" aria-label="搜尋園區內容" autocomplete="off">
+      <div class="res" id="res" role="listbox"></div>
     </div>
+    
+  </div>
+</header>
+<main>
+  <div class="stage" id="stage"><canvas id="c" aria-label="園區 3D 模型，可拖曳旋轉視角"></canvas><div id="ov"></div><div class="hp" id="hpc" hidden>拖曳旋轉視角、滾輪或雙指縮放，點金色名牌查看介紹。小人是來參拜的家屬示意。</div><div class="tpn" id="tpn"><button id="pl" aria-label="播放或暫停時間">▶</button><div><input id="tr" type="range" min="0" max="24" step="0.1" value="10" aria-label="時刻"><div class="tk"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div></div><b id="tv">10:00</b></div><div class="dock" role="toolbar" aria-label="檢視控制"><button id="rs">全景</button><button id="ls">☰ 清單</button><button id="tm" aria-pressed="true">◷ 時間</button><button id="nm" aria-pressed="true">名牌</button><button id="pp" aria-pressed="true">家屬</button><button id="tp" aria-pressed="false">鳥瞰</button><button id="pz" aria-pressed="false">暫停</button><button id="hp" aria-pressed="false" aria-label="操作說明">?</button></div></div>
 
-    <div id="imageDisplay" class="image-container">
-        <div class="placeholder-text">圖片將顯示在這裡</div>
-    </div>
-</div>
+  <h2 class="t">五大主題索引</h2>
+  <p class="sub">以下內容皆整理自高雄觀音山金寶塔官網，點開項目可前往原頁。</p>
+  <div class="themes" id="themes"></div>
+</main>
+<footer>資料來源：<a href="https://www.teinsin.com.tw/" target="_blank" rel="noopener" style="color:inherit">高雄觀音山金寶塔官網</a>（資料擷取日 2026-10-26）。3D 模型依官方「高雄觀音山金寶塔平面導覽圖」建置，為示意，並非實際比例與外觀。<br>天興實業股份有限公司｜高雄市大社區嘉誠里食坑巷 80 號｜07-3560188</footer>
 
+<aside id="dr" role="dialog" aria-modal="false" aria-labelledby="dt" aria-hidden="true">
+  <button class="x" id="cl" aria-label="關閉">×</button>
+  <div class="tag" id="dg"></div>
+  <h2 id="dt"></h2>
+  <div class="ph" id="dp">實景照片請見官網對應頁面</div>
+  <p id="dd"></p>
+  <div id="da"></div>
+</aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
-    const promptInput = document.getElementById('promptInput');
-    const generateBtn = document.getElementById('generateBtn');
-    const imageDisplay = document.getElementById('imageDisplay');
-    const placeholderText = document.querySelector('.placeholder-text');
+const B="https://www.teinsin.com.tw/",C="https://teinsin.my.canva.site/",ca="查看官方導覽圖";
+const T=[
+{n:"寶塔與樓層",c:[
+{id:"pagoda",n:"寶塔（服務台與無障礙設施）",s:"寶塔",p:[660,200],d:"導覽圖標示寶塔入口附近設有服務台、無障礙坡道、無障礙電梯、洗手間、性別友善廁所與緊急心臟除顫器（AED）。",u:C,a:ca},
+{n:"大雄寶殿",d:"寶塔內部規劃有挑高大廳的大雄寶殿，供奉地藏王菩薩及華嚴三聖莊嚴法相。",u:B+"level/place.html",a:"查看大殿介紹"},
+{n:"中西式祭拜廳",d:"寶塔內設有中西式祭拜廳，依家屬習慣選擇祭拜方式。",u:B+"level/1F.html",a:"查看寶塔介紹"},
+{n:"樓層導覽（DF～14F）",d:"分為 1F、大殿、2F、3F、DF 及 5F 至 14F，各樓層依不同需求規劃塔位，官網提供平面圖與照片。",u:B+"level/1F.html",a:"查看各樓層"}]},
+{n:"園區景觀",c:[
+{id:"four",n:"四面佛",p:[765,440],d:"導覽圖上位於大門內側、塔前停車場下方的涼亭。",u:C,a:ca},
+{id:"earth",n:"土地公",p:[775,545],ly:30,d:"導覽圖上位於四面佛下方、靠近大門處。",u:C,a:ca},
+{id:"furn",n:"環保金爐",p:[470,270],d:"位於寶塔左前方，導覽圖標示於塔前停車場上方。",u:C,a:ca},
+{n:"庭園造景",d:"含佛窟幽靜步道、南無本師釋迦牟尼佛、懷恩庭、孝親走廊（以二十四孝為主題）與三好緣（說好話、做好事、存好心）。這些景點在導覽圖上未標示位置。",u:B+"park_map/50.html",a:"查看庭園造景"},
+{n:"果緣觀光果園停車場",d:"官網介紹的停車空間，栽植 45 種果樹，具教育、休閒功能。導覽圖未標示此名稱。",u:B+"park_map/51.html",a:"查看停車空間"}]},
+{n:"風水地理",c:[
+{id:"xw",n:"后玄武・靠山",s:"后玄武",w:[2,50,-60],d:"風水導覽圖標示：寶塔背後有山為靠，坐擁「太師椅」，寓意封侯入相。",u:B+"park_map/18.html",a:"查看地理風水"},
+{id:"ql",n:"左青龍・牛背山",s:"左青龍",w:[52,43,-14],d:"位於寶塔左側（面向寶塔時在畫面右方）。牛背山嶙峋峻拔，青龍乍現、氣勢萬千，寓意庇佑後代子孫權貴綿長。",u:B+"park_map/18.html",a:"查看地理風水"},
+{id:"bh",n:"右白虎",w:[-52,25,-12],d:"位於寶塔右側（面向寶塔時在畫面左方），寓意福蔭子孫、福澤綿延；圖中另標示「脈長穴真」。",u:B+"park_map/18.html",a:"查看地理風水"},
+{id:"bj",n:"筆架山作案",s:"筆架山",w:[-33,24,40],d:"筆架山列於寶塔前方，山脊凹屈如筆架，寓意權貴在握。",u:B+"park_map/18.html",a:"查看地理風水"},
+{id:"zq",n:"前朱雀・三水合聚明堂",s:"前朱雀",w:[24,7,50],d:"前方三水合聚成明堂，地勢低，寓意財盈滿貫、財丁兩旺。",u:B+"park_map/18.html",a:"查看地理風水"},
+{id:"xk",n:"牛食坑溪（金帶纏腰）",s:"牛食坑溪",w:[-20,3,23],d:"溪水環繞園區，導覽圖稱為「金帶纏腰」。",u:B+"park_map/18.html",a:"查看地理風水"},
+{id:"dp",n:"大鵬展翅名穴",s:"大鵬展翅",w:[-9.75,22,-14],d:"導覽圖標示寶塔座落於「大鵬展翅」名穴，兩側山脈如鵬鳥之翼。",u:B+"park_map/18.html",a:"查看地理風水"},
+{n:"龍脈來歷",d:"導覽圖標示山勢自中央山脈主山，經嶺口分脈、二十八迴轉、九九尖峰，來到大社，並註明由李協和大師發現此穴。",u:B+"park_map/18.html",a:"查看地理風水"}]},
+{n:"停車與入園",c:[
+{n:"大門與道路",d:"大門位於園區主要道路旁；產業道路為停車場出口，往大社、燕巢方向請由下方道路前行。",u:C,a:ca},
+{id:"pf",n:"塔前停車場",p:[630,350],d:"位於寶塔正前方，設有身心障礙與親子相關車位標示。",u:C,a:ca},
+{id:"mo",n:"機車停車場",p:[560,500],d:"位於大門內側左方。",u:C,a:ca},
+{id:"pa",n:"A區汽車停車場",s:"A區停車場",p:[560,660],d:"位於園區左下方、湖景旁的汽車停車場。",u:C,a:ca},
+{id:"p3",n:"一、二、三號汽車停車場",s:"1-3號停車場",p:[1230,660],ly:30,d:"位於產業道路（停車場出口）旁，共分一、二、三號。法會期間在附近設有交通車接駁站與流動廁所。",u:C,a:ca},
+{id:"gate",n:"守衛室",p:[810,640],d:"位於產業道路旁，靠近大門處，旁有洗手間。",u:C,a:ca},
+{id:"office",n:"行政辦公室",p:[975,630],ly:30,d:"導覽圖標示此處設有服務台、性別友善廁所，是辦理申辦手續的地點。",u:B+"services/52.html",a:"查看申辦手續"}]},
+{n:"園區設施",c:[
+{n:"服務台",d:"寶塔入口與行政辦公室旁各設一處。",u:C,a:ca},
+{n:"無障礙設施",d:"寶塔旁標示有無障礙坡道與無障礙電梯，停車場設有身心障礙車位。",u:C,a:ca},
+{n:"洗手間與性別友善廁所",d:"寶塔旁、守衛室旁與行政辦公室旁皆有標示。",u:C,a:ca},
+{n:"緊急心臟除顫器（AED）",d:"寶塔入口附近設有 AED。",u:C,a:ca},
+{id:"paper",n:"紙錢集中區",s:"紙錢集中區",p:[330,200],d:"位於園區左上方，旁有流動廁所。法會期間另設紙錢統一集中區與紙錢販賣處。",u:C,a:ca},
+{id:"bus",n:"交通車接駁站（法會期間）",s:"接駁站",p:[770,355],d:"法會期間增設交通車接駁站，導覽圖標示於塔前、A區停車場旁與一至三號停車場旁。春節、清明兩祭第三天提供法會免費公車服務。",u:C,a:ca}]},
+{n:"法事與法會",c:[
+{n:"例行法事",d:"公司禮聘駐塔法師早晚誦經，並提供佛事諮詢。逢先人百日、對年、忌日，可聘請駐塔法師，酌收費用。",u:B+"ceremonies/17.html",a:"查看例行法事"},
+{n:"思親共修月法會",d:"農曆每月初一、十五舉行。無法到場的家屬，可在官方臉書「高雄觀音山金寶塔」收看線上直播。",u:"https://www.facebook.com/TSGAGP",a:"前往官方臉書"},
+{n:"春節、清明、中元三大法會",d:"三祭各舉行三天法會。春節法會以誦經禮佛祈安，不釋放瑜珈焰口。",u:B+"ceremonies/17.html",a:"查看法會說明"},
+{id:"rite",n:"超薦蓮位與祈福卡",d:"超薦蓮位每尊功德金自民國 116 年（2027 年）1 月 1 日起調整為 2,500 元；115 年（2026 年）12 月 31 日前完成報名繳費者維持 2,000 元。祈福卡每尊 500 元。未報名者，公司仍會為先人供立總牌位，不另收費。",u:B+"puja/101.html",a:"查看報名辦法"},
+{n:"線上法會報名",d:"可到寶塔服務處現場報名、郵政劃撥（帳號 42028572，戶名：天興實業股份有限公司），或線上報名。轉帳後請回報名系統填寫帳號末 5 碼。不接受電話報名。",u:"https://online.teinsin.com.tw/online/index.aspx",a:"前往線上報名"}]},
+{n:"管理與服務",c:[
+{id:"hours",n:"開放時間",d:"寶塔全年無休：每日 08:30～17:00，星期六 08:30～16:30，除夕 08:30～12:00，大年初一至初三 08:30～15:00。行政辦公室：週一至週五 08:30～12:00、13:00～17:00，例假日休假。官網於 2026-09-10 另有「園區服務時間調整」公告（圖片），請以公告為準。",u:B+"services/53.html",a:"查看開放時間"},
+{n:"使用管理規章與契約",d:"官網公開使用管理規章、塔位定型化契約與牌位買賣契約。",u:B+"services/132.html",a:"查看管理規章"},
+{n:"管理費專戶專簿",d:"定期公布，最新一期截至民國 115 年 9 月 30 日（2026-10-14 發布）。",u:B+"news/news_detail.aspx?id=166",a:"查看專簿"},
+{n:"最新公告",d:"2026-09-11「法會報名費用調整暨早鳥優惠」；2026-09-10「園區服務時間調整」（圖片公告）。",u:B+"news/news_detail.aspx?id=163",a:"閱讀公告"},
+{n:"先人紀事",d:"為先人留下紀念的專區。",u:B+"ancestors",a:"前往先人紀事"},
+{id:"contact",n:"聯絡我們",d:"電話 07-3560188　傳真 07-3560788　電子郵件 teinsin@ms37.hinet.net　Line 官方帳號 @t3560188。地址：高雄市大社區嘉誠里食坑巷 80 號。",u:B+"contact",a:"前往聯絡頁"}]}];
+const $=s=>document.querySelector(s),NS="http://www.w3.org/2000/svg";
+const all=[];T.forEach(t=>t.c.forEach(i=>{i.th=t.n;all.push(i)}));
+// scene
 
-    const generateImage = async (prompt) => {
-        imageDisplay.innerHTML = `<div class="loading-spinner"></div>`;
-        if (placeholderText) {
-          placeholderText.style.display = 'none';
-        }
+// themes
+$("#themes").innerHTML=T.map((t,a)=>`<section class="th"><h3>${t.n}</h3><ul>${t.c.map((i,b)=>`<li><button data-k="${all.indexOf(i)}">${i.n}</button></li>`).join("")}</ul></section>`).join("");
+// drawer
+const dr=$("#dr");let last=null;
+function open(i,from){last=from||document.activeElement;document.querySelectorAll(".hs").forEach(h=>h.classList.toggle("on",h.dataset.id===i.id));
+$("#dg").textContent=i.th;$("#dt").textContent=i.n;$("#dd").textContent=i.d;
+$("#da").innerHTML=(i.u?`<a class="cta" href="${i.u}" target="_blank" rel="noopener">${i.a||"前往官網"}</a>`:"")+(i.p?`<button class="cta alt" data-dir="1">回到地圖</button>`:"");
+dr.classList.add("open");dr.setAttribute("aria-hidden","false");$("#cl").focus()}
+function close(){dr.classList.remove("open");dr.setAttribute("aria-hidden","true");document.querySelectorAll(".hs").forEach(h=>h.classList.remove("on"));if(last&&last.focus)last.focus()}
+$("#cl").onclick=close;document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+$("#da").onclick=e=>{if(e.target.dataset.dir){close();$("#stage").scrollIntoView({behavior:"smooth",block:"center"})}};
+$("#themes").onclick=e=>{const b=e.target.closest("button");if(b)open(all[b.dataset.k],b)};
+const W=(x,y)=>[(x-855)*.05,(y-414)*.05];
+const st=$("#stage"),ov=$("#ov");
+let ren,sc,cam,ctl,hemi,dir,glow,gm,og,eagle,cm;const clouds=[];
+const hs=[],walkers=[];
+try{
+ren=new THREE.WebGLRenderer({canvas:$("#c"),antialias:true});ren.setPixelRatio(Math.min(devicePixelRatio,2));
+sc=new THREE.Scene();cam=new THREE.PerspectiveCamera(40,1,.5,800);
+ctl=new THREE.OrbitControls(cam,$("#c"));ctl.enableDamping=true;ctl.maxPolarAngle=1.42;ctl.minDistance=14;ctl.maxDistance=150;
+hemi=new THREE.HemisphereLight(0xffffff,0x7FB57A,1);dir=new THREE.DirectionalLight(0xffffff,1);dir.position.set(-30,40,25);glow=new THREE.PointLight(0xffc870,0,60);glow.position.set(-9.75,10,-9);sc.add(hemi,dir,glow);
+const M=c=>new THREE.MeshLambertMaterial({color:c}),mesh=(g,m,x=0,y=0,z=0)=>{const o=new THREE.Mesh(g,m);o.position.set(x,y,z);return o},add=(...a)=>{const o=mesh(...a);sc.add(o);return o};
+const pw=M(0xE3BC62),pr=M(0xC48A2C),wall=M(0xF2EBDA),roof=M(0x7C4F34),gold=M(0xC9A24B),road=M(0xB9AE96),lot=M(0xDCD3BE),leaf=M(0x4F8A4E),bark=M(0x6B4A32);
+gm=M(0x7FB57A);og=M(0x6FA05A);add(new THREE.BoxGeometry(320,1,260),og,0,-.9,0);const isl=add(new THREE.CylinderGeometry(1,1,1,64),gm,0,-.5,0);isl.scale.set(36,1,26);const rg=add(new THREE.RingGeometry(1,1.17,64),M(0x5AA3CF),0,-.36,0);rg.rotation.x=-Math.PI/2;rg.scale.set(36,26,1);
+const Bx=(w,h,d)=>new THREE.BoxGeometry(w,h,d),flat=(x1,y1,x2,y2,m,y=.08,h=.14)=>{const a=W(x1,y1),b=W(x2,y2);add(Bx(b[0]-a[0],h,b[1]-a[1]),m,(a[0]+b[0])/2,y,(a[1]+b[1])/2)};
+flat(255,480,395,700,M(0x6FA6C9),.07,.12);
+const seg=(p,q,w)=>{const a=W(...p),b=W(...q),o=add(Bx(Math.hypot(b[0]-a[0],b[1]-a[1]),.12,w),road,(a[0]+b[0])/2,.1,(a[1]+b[1])/2);o.rotation.y=-Math.atan2(b[1]-a[1],b[0]-a[0])};
+const pl=(a,w)=>a.slice(1).forEach((p,k)=>seg(a[k],p,w));
+pl([[255,290],[300,390],[450,430],[600,440],[700,510],[700,790]],2.4);pl([[700,578],[1330,578]],1.8);pl([[330,785],[1360,785]],1.8);
+flat(500,560,660,760,lot,.1,.14);flat(490,455,630,540,lot,.1,.14);flat(560,305,720,380,lot,.1,.14);
+[1115,1205,1295].forEach(x=>flat(x,600,x+70,730,lot,.1,.14));
+const pg=new THREE.Group();let y=0;
+[[4.6,1.4],[4,2.4],[3.4,2.2],[2.8,2],[2.2,1.8]].forEach(([r,h])=>{const c=mesh(new THREE.CylinderGeometry(r,r,h,8),pw,0,y+h/2,0);c.rotation.y=Math.PI/8;pg.add(c);y+=h;const f=mesh(new THREE.CylinderGeometry(r*.55,r*1.3,.9,8),pr,0,y+.45,0);f.rotation.y=Math.PI/8;pg.add(f);y+=.9});
+pg.add(mesh(new THREE.CylinderGeometry(.1,.1,2.2,8),gold,0,y+1.1,0));pg.add(mesh(Bx(3.4,1.8,1.4),pw,0,.9,4.6));
+const pp=W(660,150);pg.position.set(pp[0],.5,pp[1]);sc.add(pg);
+const bld=(x1,y1,x2,y2,h)=>{const a=W(x1,y1),b=W(x2,y2),w=b[0]-a[0],d=b[1]-a[1],cx=(a[0]+b[0])/2,cz=(a[1]+b[1])/2;add(Bx(w,h,d),wall,cx,h/2,cz);add(Bx(w+.4,.3,d+.4),roof,cx,h+.15,cz)};
+[[430,230,520,300,2.2],[285,185,345,245,1.6],[740,285,800,325,1.3],[740,600,830,650,1.8],[900,600,1040,670,2.6]].forEach(b=>bld(...b));
+[[755,420,795,460,1.8],[760,500,795,535,1.1]].forEach(([x1,y1,x2,y2,h])=>{const a=W(x1,y1),b=W(x2,y2),cx=(a[0]+b[0])/2,cz=(a[1]+b[1])/2,w=b[0]-a[0];add(Bx(w*.8,h,w*.8),wall,cx,h/2,cz);const c=add(new THREE.ConeGeometry(w*.95,1.1,4),roof,cx,h+.55,cz);c.rotation.y=Math.PI/4});
+[[330,110],[400,60],[790,60],[830,170],[800,230],[990,520],[1100,530],[1250,520],[1400,530],[300,440],[380,600],[420,700],[1180,520],[450,760],[1000,760],[1350,740],[620,330],[690,300]].forEach(([x,y],k)=>{const p=W(x,y),s=.85+(k%3)*.2;add(new THREE.CylinderGeometry(.15,.2,1,6),bark,p[0],.5,p[1]);add(new THREE.ConeGeometry(1.2*s,2.6*s,7),leaf,p[0],1.9*s,p[1]);add(new THREE.ConeGeometry(.9*s,2*s,7),leaf,p[0],3.1*s,p[1])});
+const MS=new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:1,metalness:0}),stone=M(0xA8A59A),RV=M(0x5AA3CF);
+const mt=(x,z,r,h,g=0x4F7F5A,k=0x7D8791)=>{const geo=new THREE.ConeGeometry(r,h,9,4),P=geo.attributes.position,C=[],sd=x*.37+z*.11,gc=new THREE.Color(g),kc=new THREE.Color(k);
+for(let i=0;i<P.count;i++){const t=(P.getY(i)+h/2)/h,a=Math.atan2(P.getZ(i),P.getX(i)),f=(1+.22*Math.sin(a*3+sd)+.12*Math.sin(a*5+sd*2))*(1+.15*Math.sin(t*9+sd));P.setX(i,P.getX(i)*f);P.setZ(i,P.getZ(i)*f);const c=gc.clone().lerp(kc,Math.min(1,Math.max(0,(t-.3)/.4)));C.push(c.r,c.g,c.b)}
+geo.setAttribute("color",new THREE.Float32BufferAttribute(C,3));geo.computeVertexNormals();return add(geo,MS,x,-.4+h/2,z)};
+[[-14,-52,16,34],[2,-60,20,44],[16,-54,15,32],[-30,-56,18,26],[30,-58,18,28],[52,-14,14,38],[60,-2,12,30],[48,-30,13,28],[66,-18,16,24],[50,8,12,30],[-52,-12,14,22],[-58,2,13,18],[-50,-26,13,20],[-66,-14,15,16],[-40,38,6,16],[-33,42,6,20],[-26,39,6,15],[-48,34,7,14]].forEach(m=>mt(...m));
+[[-60,-100,30,55],[-10,-105,34,70],[45,-100,30,50],[90,-95,32,45],[-100,-90,30,45],[-95,10,26,40],[100,-30,28,36]].forEach(m=>mt(...m,0x5F7F86,0x8D9CAA));
+[[0,52,16,6],[22,50,14,5],[-20,56,14,5],[60,30,16,8],[-62,48,16,8]].forEach(m=>mt(...m,0x7FB57A,0x8FB070));
+const sg=(a,b,w,m,y)=>{const dx=b[0]-a[0],dz=b[1]-a[1],o=add(Bx(Math.hypot(dx,dz),.12,w),m,(a[0]+b[0])/2,y,(a[1]+b[1])/2);o.rotation.y=-Math.atan2(dz,dx)};
+const rv=(pts,w)=>pts.slice(1).forEach((q,k)=>sg(pts[k],q,w,RV,-.36));
+rv([[70,-45],[58,-30],[48,-14],[43,0]],2.6);rv([[-75,38],[-55,50],[-30,56],[0,54],[30,56],[60,52],[85,60]],3.2);
+sg([-7.75,18.8],[-7.75,25],2.4,road,.1);add(Bx(3.4,.3,7),stone,-7.75,-.05,28);sg([-7.75,31.5],[-5,50],2.4,road,-.33);sg([-5,50],[-5,75],2.4,road,-.33);
+add(Bx(13,.5,13),M(0xA9A79F),pp[0],.25,pp[1]);add(Bx(4,.35,3),stone,pp[0],.17,pp[1]+7.6);
+[[6,-6,5,3],[18,-6,4,3],[-22,-8,4,3],[.5,-8,2.5,2]].forEach(([x,z,a,b])=>{const l=add(new THREE.CylinderGeometry(1,1,.1,24),M(0xA3CF82),x,.07,z);l.scale.set(a,1,b)});
+const rt=(x,z,s,k)=>{add(new THREE.CylinderGeometry(.15,.2,1,6),bark,x,.5,z);if(k)add(new THREE.SphereGeometry(1.3*s,8,6),M(k==2?0xE8A0B4:0x6FA05A),x,2.2*s,z);else{add(new THREE.ConeGeometry(1.2*s,2.6*s,7),leaf,x,1.9*s,z);add(new THREE.ConeGeometry(.9*s,2*s,7),leaf,x,3.1*s,z)}};
+for(let k=0;k<46;k++){const a=k/46*6.283,x=33.5*Math.cos(a),z=23.5*Math.sin(a);if(Math.abs(x+7.75)<4&&z>15)continue;rt(x,z,.9+(k%4)*.1,k%3)}
+for(let k=0;k<12;k++){const a=k/12*6.283;if(Math.abs(a-1.57)<.5)continue;add(new THREE.SphereGeometry(.9,8,6),M(0x5E9A52),pp[0]+8.6*Math.cos(a),.6,pp[1]+8.6*Math.sin(a))}
+const ws=new THREE.Shape();[[0,0],[10,5],[22,12],[34,22],[31,15],[28,17],[25,11],[22,13],[19,8],[15,10],[11,4],[6,5],[0,-2]].forEach((q,k)=>k?ws.lineTo(q[0],q[1]):ws.moveTo(q[0],q[1]));
+const EM=new THREE.MeshBasicMaterial({color:0xFFF6DC,transparent:true,opacity:.55,side:THREE.DoubleSide,depthWrite:false}),w1=mesh(new THREE.ShapeGeometry(ws),EM),w2=mesh(new THREE.ShapeGeometry(ws),EM);w2.scale.x=-1;
+eagle=new THREE.Group();eagle.add(w1,w2);eagle.scale.setScalar(1);eagle.position.set(pp[0],6.5,pp[1]-3);sc.add(eagle);
+cm=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.88,depthWrite:false});
+for(let k=0;k<16;k++){const g=new THREE.Group(),n=4+k%3;for(let j=0;j<n;j++){const b=mesh(new THREE.SphereGeometry(4+(j*7+k)%4,10,8),cm,(j-n/2)*5.2+(k%2),(j%2)*1.4,(j%3-1)*2.2);b.scale.y=.55;g.add(b)}
+g.position.set(-150+(k*53)%300,40+(k*7)%22,-130+(k*37)%150);g.userData.v=.7+(k%5)*.35;sc.add(g);clouds.push(g)}
+const WH=M(0xF6F6F2),DK=M(0x2B2B2B),GN=M(0x4F9E78),OR=M(0xE8A33C),RD=M(0xC8372D),sp=(r,m,x,y,z,a=1,b=1,c=1)=>{const o=mesh(new THREE.SphereGeometry(r,12,8),m,x,y,z);o.scale.set(a,b,c);return o};
+const tiger=new THREE.Group();tiger.add(sp(.6,WH,0,.9,0,1.6,.9,1),sp(.55,WH,1.1,1.4,0),sp(.18,WH,1.2,1.9,.3),sp(.18,WH,1.2,1.9,-.3),mesh(Bx(.12,.55,.75),DK,.1,1.15,0),mesh(Bx(.12,.55,.75),DK,-.4,1.15,0),mesh(new THREE.CylinderGeometry(.08,.08,1.1,6),DK,-1.2,1.3,0));
+[[.7,.3],[.7,-.3],[-.7,.3],[-.7,-.3]].forEach(l=>tiger.add(mesh(Bx(.3,.6,.25),WH,l[0],.3,l[1])));tiger.scale.setScalar(2.6);tiger.rotation.y=-Math.PI/2;tiger.position.set(-52,21.3,-12);sc.add(tiger);
+const dr=new THREE.Group();for(let k=0;k<8;k++)dr.add(sp(.55-.03*k,GN,-k*.9,.8+Math.sin(k*.9)*.5,0));dr.add(sp(.8,GN,.9,1.5,0),mesh(new THREE.ConeGeometry(.15,.8,6),OR,.9,2.3,.4),mesh(new THREE.ConeGeometry(.15,.8,6),OR,.9,2.3,-.4),sp(.12,DK,1.5,1.7,.35),sp(.12,DK,1.5,1.7,-.35));dr.scale.setScalar(2.4);dr.rotation.y=-Math.PI/2;dr.position.set(52,37.3,-14);sc.add(dr);
+const tu=new THREE.Group(),sh=mesh(new THREE.SphereGeometry(1,14,8,0,Math.PI*2,0,Math.PI/2),DK,0,.3,0);sh.scale.set(1.5,1,1.2);tu.add(sh,mesh(new THREE.CylinderGeometry(1.4,1.4,.25,14),M(0x6B4A32),0,.15,0),sp(.45,GN,1.8,.55,0));[[1,.9],[1,-.9],[-1,.9],[-1,-.9]].forEach(l=>tu.add(sp(.3,GN,l[0],.2,l[1])));tu.scale.setScalar(3);tu.rotation.y=-Math.PI/2;tu.position.set(2,43.4,-60);sc.add(tu);
+const br=new THREE.Group();br.add(mesh(new THREE.CylinderGeometry(.35,.45,8,10),M(0xE8DCC0),0,5.6,0),mesh(new THREE.ConeGeometry(.65,2.6,10),DK,0,1.3,0),sp(.4,DK,0,9.8,0));br.children[1].rotation.x=Math.PI;br.rotation.z=.3;br.position.set(-29,0,45);sc.add(br);
+[[0,27.2],[7,26.8],[-6,26.9],[13,26]].forEach(([x,z])=>{add(new THREE.CylinderGeometry(1,1,.06,12),M(0x4C9A57),x,-.28,z);for(let j=0;j<6;j++){const a=j*1.05,c=add(new THREE.ConeGeometry(.35,1,6),M(0xF3B6CC),x+.4*Math.cos(a),-.2,z+.4*Math.sin(a));c.rotation.z=-Math.cos(a)*.5;c.rotation.x=Math.sin(a)*.5}});
+[[-7.6,12],[-8.4,15],[-7.2,18],[-8,21.5],[-7.5,24]].forEach(([x,z])=>{add(Bx(.9,.4,.6),gold,x,.36,z)});
+[[pp[0]-6,pp[1]+8],[pp[0]+6,pp[1]+8],[2.5,0],[-1.8,3],[-17,-4],[-21,-9]].forEach(([x,z])=>{add(new THREE.CylinderGeometry(.06,.06,2.2,6),DK,x,1.1,z);sp(.5,RD,x,2.4,z,1,1.2,1);sc.add(sp(.5,RD,x,2.4,z,1,1.2,1))});
+const mk=new THREE.Group();mk.add(mesh(new THREE.CylinderGeometry(.35,.5,1.1,10),M(0xCFA66A),0,.7,0),sp(.4,M(0xF0D2B4),0,1.55,0));mk.scale.setScalar(1.6);mk.position.set(3.6,.16,3.2);sc.add(mk);
+const gr=add(new THREE.RingGeometry(1.19,1.215,64),new THREE.MeshBasicMaterial({color:0xE0B552}),0,-.34,0);gr.rotation.x=-Math.PI/2;gr.scale.set(36,26,1);
+all.filter(i=>i.p||i.w).forEach(i=>{const b=document.createElement("button");b.className="hs";b.dataset.id=i.id;b.setAttribute("aria-label",i.n);b.innerHTML=`<i></i><span>${i.s||i.n}</span>`;ov.appendChild(b);{const q=i.w||(p=>[p[0],i.id==="pagoda"?18:3.4,p[1]])(W(...i.p));hs.push({el:b,p:new THREE.Vector3(q[0],q[1],q[2]||0)})}});
+const PA=[[[300,390],[450,430],[600,440],[700,510],[700,700]],[[700,500],[690,420],[650,330],[640,260]],[[720,578],[1000,578],[1300,578]],[[980,660],[1100,590],[1250,590]],[[700,440],[745,445],[770,490],[700,525]],[[560,620],[620,560],[700,520]],[[560,240],[660,235],[760,245]],[[470,330],[400,265],[330,245]]],cols=[0x2B2B2B,0xF4F4F4,0x6B7A8F,0x8A6F5A,0x3F5E4E,0xB85C5C,0xD9AE5A,0x4E6E9E];
+PA.forEach((path,pi)=>{const pts=path.map(q=>W(...q)),L=[0];pts.forEach((q,k)=>{if(k)L.push(L[k-1]+Math.hypot(q[0]-pts[k-1][0],q[1]-pts[k-1][1]))});
+for(let k=0;k<2+pi%2;k++){const g=new THREE.Group();g.add(mesh(new THREE.CylinderGeometry(.3,.38,1.2,8),M(cols[(pi*3+k*2)%8]),0,.8,0));g.add(mesh(new THREE.SphereGeometry(.3,10,8),M(0xF0D2B4),0,1.7,0));sc.add(g);walkers.push({g,pts,L,len:L[L.length-1],s:Math.random()*L[L.length-1],v:(.7+Math.random()*.7)*(k%2?1:-1),ph:Math.random()*6})}});
+}catch(e){st.innerHTML='<p style="padding:24px">此裝置無法顯示 3D 模型，請改用其他瀏覽器，或從下方主題索引查看內容。</p>';ren=null}
+const home=top=>{cam.position.set(...(top?[0,115,22]:[46,40,72]));ctl.target.set(0,2,0);ctl.update()};
+const PR={dawn:[0xF5D9C0,0xFFE6D0,0x8DB38A,.9,0xFFD2A0,.8,0],day:[0xBFE0EE,0xFFFFFF,0x7FB57A,1,0xFFFFFF,.9,0],dusk:[0xE59A6C,0xFFD2A8,0x8E9C6A,.8,0xFF9A55,.8,.5],night:[0x10203A,0x6677AA,0x27483F,.55,0x8AA0D0,.35,1.1]},KF=[[0,"night"],[5,"night"],[6.5,"dawn"],[10,"day"],[15,"day"],[17.5,"dusk"],[19.5,"night"],[24,"night"]];
+let H=10,paused=false,playing=false;const clk=new THREE.Clock();
+function setH(h){if(!ren)return;let k=0;while(k<KF.length-2&&h>=KF[k+1][0])k++;const a=KF[k],b=KF[k+1],f=Math.min(1,Math.max(0,(h-a[0])/(b[0]-a[0]))),A=PR[a[1]],B=PR[b[1]],cl=i=>new THREE.Color(A[i]).lerp(new THREE.Color(B[i]),f),nm=i=>A[i]+(B[i]-A[i])*f;
+sc.background=cl(0);sc.fog=new THREE.Fog(cl(0),110,360);og.color.copy(cl(2)).multiplyScalar(.82);cm.color.copy(cl(1));hemi.color.copy(cl(1));hemi.groundColor.copy(cl(2));hemi.intensity=nm(3);dir.color.copy(cl(4));dir.intensity=nm(5);glow.intensity=nm(6);gm.color.copy(cl(2));
+$("#tv").textContent=String(Math.floor(h)).padStart(2,"0")+":"+String(Math.floor(h%1*60)).padStart(2,"0");$("#tr").value=h}
+function stepW(dt){return w=>{w.s+=w.v*dt;if(w.s>w.len||w.s<0){w.v=-w.v;w.s=Math.min(w.len,Math.max(0,w.s))}let k=1;while(k<w.L.length-1&&w.s>w.L[k])k++;const f=(w.s-w.L[k-1])/(w.L[k]-w.L[k-1]),p=w.pts[k-1],q=w.pts[k],sg=w.v>0?1:-1;w.g.position.set(p[0]+(q[0]-p[0])*f,.16+Math.abs(Math.sin(w.ph+w.s*5))*.08,p[1]+(q[1]-p[1])*f);w.g.rotation.y=Math.atan2((q[0]-p[0])*sg,(q[1]-p[1])*sg)}}
 
-        const payload = {
-            contents: [{
-                parts: [{ text: prompt }]
-            }],
-            generationConfig: {
-                responseModalities: ['TEXT', 'IMAGE']
-            },
-        };
+if(ren){home();setH(10);
+function fit(){const w=st.clientWidth,h=st.clientHeight;ren.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+new ResizeObserver(fit).observe(st);
+(function tick(){const dt=Math.min(clk.getDelta(),.1);if(!paused){if(playing){H=(H+dt*.6)%24;setH(H)}walkers.forEach(stepW(dt));clouds.forEach(c=>{c.position.x+=c.userData.v*dt;if(c.position.x>170)c.position.x=-170})}if(eagle)eagle.rotation.y=Math.atan2(cam.position.x-eagle.position.x,cam.position.z-eagle.position.z);ctl.update();ren.render(sc,cam);const w=st.clientWidth,h=st.clientHeight;hs.forEach(o=>{const v=o.p.clone().project(cam);o.el.style.display=v.z<1?"":"none";o.el.style.left=(v.x*.5+.5)*w+"px";o.el.style.top=(-v.y*.5+.5)*h+"px"});requestAnimationFrame(tick)})();
+const tg=(id,fn)=>{$(id).onclick=e=>{const b=e.currentTarget,on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);fn(on)}};
+$("#rs").onclick=()=>home();$("#ls").onclick=()=>document.querySelector(".themes").scrollIntoView({behavior:"smooth"});
+tg("#tp",on=>{home(on);clouds.forEach(c=>c.visible=!on)});tg("#tm",on=>{$("#tpn").hidden=!on});tg("#nm",on=>ov.classList.toggle("nonames",!on));tg("#pp",on=>walkers.forEach(w=>w.g.visible=on));
+tg("#pz",on=>{paused=on;$("#pz").textContent=on?"繼續":"暫停"});$("#pz").setAttribute("aria-pressed","false");
+tg("#hp",on=>{$("#hpc").hidden=!on});
+$("#pl").onclick=()=>{playing=!playing;$("#pl").textContent=playing?"❚❚":"▶"};
+$("#tr").oninput=e=>{H=+e.target.value;setH(H)};
+ov.addEventListener("click",e=>{const g=e.target.closest(".hs");if(g)open(all.find(i=>i.id===g.dataset.id),g)})}
 
-        const apiKey = "";
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
-
-        let retries = 0;
-        const maxRetries = 5;
-        let response;
-
-        while (retries < maxRetries) {
-            try {
-                response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    break;
-                } else if (response.status === 429) {
-                    const delay = Math.pow(2, retries) * 1000;
-                    console.warn(`Too many requests. Retrying in ${delay / 1000} seconds...`);
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    retries++;
-                } else {
-                    const error = await response.json();
-                    console.error('API Error:', error);
-                    imageDisplay.innerHTML = `<p class="text-red-500 text-lg">生成圖片失敗，請稍後再試。</p>`;
-                    return;
-                }
-            } catch (error) {
-                console.error('Fetch Error:', error);
-                imageDisplay.innerHTML = `<p class="text-red-500 text-lg">網路連線或 API 請求發生錯誤。</p>`;
-                return;
-            }
-        }
-
-        if (!response || !response.ok) {
-            imageDisplay.innerHTML = `<p class="text-red-500 text-lg">已達最大重試次數，無法生成圖片。</p>`;
-            return;
-        }
-
-        const result = await response.json();
-        const base64Data = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
-
-        if (base64Data) {
-            const imageUrl = `data:image/png;base64,${base64Data}`;
-            imageDisplay.innerHTML = `<img src="${imageUrl}" alt="Generated Image">`;
-        } else {
-            imageDisplay.innerHTML = `<p class="text-red-500 text-lg">無法從回應中取得圖片資料，請檢查您的生成詞是否恰當。</p>`;
-        }
-    };
-
-    generateBtn.addEventListener('click', () => {
-        const prompt = promptInput.value.trim();
-        if (prompt) {
-            generateImage(prompt);
-        }
-    });
-
-    // Initial prompt generation
-    window.onload = function() {
-        const initialPrompt = promptInput.value.trim();
-        if (initialPrompt) {
-            generateImage(initialPrompt);
-        }
-    }
+// search
+const kw={法會:"rite",車位:"pa",停車:"pa",交通:"bus",時間:"hours",電話:"contact",地址:"contact",廁所:"paper"};
+$("#q").oninput=e=>{const v=e.target.value.trim(),r=$("#res");if(!v){r.style.display="none";return}
+let m=all.filter(i=>(i.n+i.d+i.th).includes(v));
+Object.keys(kw).forEach(k=>{if(v.includes(k)||k.includes(v)){const x=all.find(i=>i.id===kw[k]);if(x&&!m.includes(x))m.push(x)}});
+r.innerHTML=m.length?m.map(i=>`<button data-k="${all.indexOf(i)}">${i.n}<small>${i.th}</small></button>`).join(""):`<div style="padding:12px 14px;color:var(--mut)">找不到「${v.replace(/</g,"")}」，可改搜尋「法會」或「開放時間」。</div>`;r.style.display="block"};
+$("#res").onclick=e=>{const b=e.target.closest("button");if(b){$("#res").style.display="none";open(all[b.dataset.k],$("#q"))}};
+document.addEventListener("click",e=>{if(!e.target.closest(".search"))$("#res").style.display="none"});
 </script>
-
 </body>
 </html>
