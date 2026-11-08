@@ -22,12 +22,13 @@ body.nopanel .stage{right:0}
 .brand{left:calc(16px + env(safe-area-inset-left,0px));top:calc(14px + env(safe-area-inset-top,0px));border-radius:18px;padding:12px 20px}
 .brand h1{font-size:clamp(20px,3vw,32px);line-height:1.15;letter-spacing:.06em;color:var(--ac)}
 .brand p{margin:4px 0 0;font-size:12px;color:var(--mut)}
-.top{left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translateX(-50%);display:flex;gap:8px;max-width:calc(100% - 24px)}
+.top{left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translateX(-50%);display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:calc(100% - 24px)}
 .grp{display:flex;gap:2px;padding:5px;border-radius:999px;background:var(--card);box-shadow:0 6px 22px rgba(0,0,0,.22)}
 .grp button{border:0;background:none;color:var(--mut);border-radius:999px;padding:7px 12px;font:inherit;font-size:13px;white-space:nowrap;cursor:pointer}
 .grp button:hover{background:var(--bg)}
 .grp button[aria-pressed=true],.grp button.cur{background:#1d1d1d;color:#fff}
 .rt{right:14px;top:calc(14px + env(safe-area-inset-top,0px));display:flex;gap:8px;background:none;box-shadow:none}
+.grp input{accent-color:var(--green);width:84px;align-self:center;margin:0 8px}.grp input[hidden]{display:none}
 .rt button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18)}
 .tpn{left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;align-items:center;gap:12px;border-radius:16px;padding:10px 16px;width:min(460px,calc(100% - 24px))}
 .tpn>div{flex:1}.tpn input{width:100%;accent-color:var(--green)}
@@ -93,7 +94,7 @@ body.nopanel #pn{transform:translateY(105%)}
   <div class="fl brand"><h1>觀音山・安心同行島</h1><p>把思念，串起來。無論身在何處，都能走進園區。</p></div>
   <div class="fl top" style="background:none;box-shadow:none">
     <div class="grp" id="tg" role="toolbar" aria-label="時段"><button data-h="7" title="清晨">晨</button><button data-h="12" class="cur" title="白天">日</button><button data-h="17.5" title="黃昏">昏</button><button data-h="22" title="夜晚">夜</button></div>
-    <div class="grp" role="toolbar" aria-label="檢視控制"><button id="nm" aria-pressed="true">名牌</button><button id="pp" aria-pressed="true">家屬</button><button id="tm" aria-pressed="false">時間</button><button id="tp" aria-pressed="false">鳥瞰</button><button id="pz" aria-pressed="false">暫停</button></div>
+    <div class="grp" role="toolbar" aria-label="檢視控制"><button id="nm" aria-pressed="true">名牌</button><button id="pp" aria-pressed="true">家屬</button><button id="tm" aria-pressed="false">時間</button><button id="tp" aria-pressed="false">鳥瞰</button><button id="pz" aria-pressed="false">暫停</button><button id="mu" aria-pressed="false">♪ 音樂</button><input id="vol" type="range" min="0" max="1" step=".05" value=".35" aria-label="音量" hidden></div>
   </div>
   <div class="fl rt"><button id="rs">⤢ 全景</button><button id="ls">☰ 清單</button><button id="hp" aria-pressed="false" aria-label="操作說明">?</button></div>
   <div class="fl hp" id="hpc" hidden>拖曳旋轉視角、滾輪或雙指縮放，點名牌查看介紹。小人是來參拜的家屬示意。</div>
@@ -383,6 +384,26 @@ $("#tr").oninput=e=>{H=+e.target.value;setH(H)};
 $("#tg").onclick=e=>{const b=e.target.closest("button");if(b){playing=false;$("#pl").textContent="▶";H=+b.dataset.h;setH(H)}};
 ov.addEventListener("click",e=>{const g=e.target.closest(".hs");if(g)open(all.find(i=>i.id===g.dataset.id))})}
 
+// ambient sound (synthesized)
+const AU={};let aOn=false,nextBowl=0;
+function aInit(){if(AU.c)return;const c=AU.c=new(window.AudioContext||window.webkitAudioContext)();AU.m=c.createGain();AU.m.gain.value=0;AU.m.connect(c.destination);
+const nb=w=>{const b=c.createBuffer(1,c.sampleRate*4,c.sampleRate),d=b.getChannelData(0);let l=0;for(let i=0;i<d.length;i++){const x=Math.random()*2-1;if(w){d[i]=x}else{l=(l+.02*x)/1.02;d[i]=l*3.5}}return b};
+const mk=(buf,type,f,q)=>{const s=c.createBufferSource();s.buffer=buf;s.loop=true;const fl=c.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q;const g=c.createGain();g.gain.value=0;s.connect(fl);fl.connect(g);g.connect(AU.m);s.start();return g};
+AU.w=mk(nb(0),"lowpass",600,.4);AU.r=mk(nb(1),"bandpass",1800,.7);
+const lf=c.createOscillator(),lg=c.createGain();lf.frequency.value=.1;lg.gain.value=.08;lf.connect(lg);lg.connect(AU.w.gain);lf.start();
+const co=c.createOscillator(),cg=c.createGain(),cl=c.createOscillator(),cd=c.createGain();co.frequency.value=4300;cl.type="square";cl.frequency.value=16;cd.gain.value=.5;cg.gain.value=.5;cl.connect(cd);cd.connect(cg.gain);AU.k=c.createGain();AU.k.gain.value=0;co.connect(cg);cg.connect(AU.k);AU.k.connect(AU.m);co.start();cl.start()}
+function bowl(f,v){const c=AU.c,t=c.currentTime;[[1,1],[2.76,.45],[5.4,.2]].forEach(([r,a])=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f*r;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*a,t+.02);g.gain.exponentialRampToValueAtTime(.0005,t+7);o.connect(g);g.connect(AU.m);o.start(t);o.stop(t+7.2)})}
+function bird(){const c=AU.c,t=c.currentTime,n=2+Math.floor(Math.random()*3),f=2200+Math.random()*1800;for(let i=0;i<n;i++){const o=c.createOscillator(),g=c.createGain(),s=t+i*.13;o.frequency.setValueAtTime(f,s);o.frequency.exponentialRampToValueAtTime(f*(1.2+Math.random()*.4),s+.09);g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.12,s+.02);g.gain.exponentialRampToValueAtTime(.001,s+.1);o.connect(g);g.connect(AU.m);o.start(s);o.stop(s+.12)}}
+function aMix(){if(!AU.c||!aOn)return;const h=H,t=AU.c.currentTime,day=h>=6&&h<17.5,dusk=h>=17.5&&h<19.5,night=!day&&!dusk;
+AU.w.gain.setTargetAtTime(night?.12:.2,t,2);AU.r.gain.setTargetAtTime(night?.1:.04,t,2);AU.k.gain.setTargetAtTime(night?.05:dusk?.02:0,t,2);
+if(Math.random()<(day?.6:dusk?.15:0))bird();
+if(Date.now()>nextBowl){bowl(dusk?196:260,dusk?.3:.22);nextBowl=Date.now()+60000+Math.random()*60000}}
+setInterval(aMix,4000);
+$("#mu").onclick=e=>{const b=e.currentTarget,on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);$("#vol").hidden=!on;aOn=on;
+if(on){aInit();AU.c.resume();AU.m.gain.setTargetAtTime(+$("#vol").value,AU.c.currentTime,.5);nextBowl=Date.now()+70000;aMix();bowl(260,.25)}
+else if(AU.c){AU.m.gain.setTargetAtTime(0,AU.c.currentTime,.3);setTimeout(()=>{if(!aOn)AU.c.suspend()},1200)}};
+$("#vol").oninput=e=>{if(AU.c)AU.m.gain.setTargetAtTime(+e.target.value,AU.c.currentTime,.1)};
+document.addEventListener("visibilitychange",()=>{if(!AU.c||!aOn)return;document.hidden?AU.c.suspend():AU.c.resume()});
 // search
 const kw={法會:"rite",車位:"pa",停車:"pa",交通:"bus",時間:"hours",電話:"contact",地址:"contact",廁所:"paper"};
 $("#q").oninput=e=>{const v=e.target.value.trim(),r=$("#sr");if(!v){r.hidden=true;$("#themes").hidden=false;return}
