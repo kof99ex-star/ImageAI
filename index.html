@@ -389,13 +389,13 @@ const AU={};let aOn=false,nextBowl=0;
 function aInit(){if(AU.c)return;const c=AU.c=new(window.AudioContext||window.webkitAudioContext)();AU.m=c.createGain();AU.m.gain.value=0;AU.m.connect(c.destination);
 const nb=w=>{const b=c.createBuffer(1,c.sampleRate*4,c.sampleRate),d=b.getChannelData(0);let l=0;for(let i=0;i<d.length;i++){const x=Math.random()*2-1;if(w){d[i]=x}else{l=(l+.02*x)/1.02;d[i]=l*3.5}}return b};
 const mk=(buf,type,f,q)=>{const s=c.createBufferSource();s.buffer=buf;s.loop=true;const fl=c.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q;const g=c.createGain();g.gain.value=0;s.connect(fl);fl.connect(g);g.connect(AU.m);s.start();return g};
-AU.w=mk(nb(0),"lowpass",600,.4);AU.r=mk(nb(1),"bandpass",1800,.7);
-const lf=c.createOscillator(),lg=c.createGain();lf.frequency.value=.1;lg.gain.value=.08;lf.connect(lg);lg.connect(AU.w.gain);lf.start();
+AU.w=mk(nb(0),"lowpass",350,.2);AU.r=mk(nb(1),"bandpass",1800,.7);
+const lf=c.createOscillator(),lg=c.createGain();lf.frequency.value=.06;lg.gain.value=.015;lf.connect(lg);lg.connect(AU.w.gain);lf.start();
 const co=c.createOscillator(),cg=c.createGain(),cl=c.createOscillator(),cd=c.createGain();co.frequency.value=4300;cl.type="square";cl.frequency.value=16;cd.gain.value=.5;cg.gain.value=.5;cl.connect(cd);cd.connect(cg.gain);AU.k=c.createGain();AU.k.gain.value=0;co.connect(cg);cg.connect(AU.k);AU.k.connect(AU.m);co.start();cl.start()}
 function bowl(f,v){const c=AU.c,t=c.currentTime;[[1,1],[2.76,.45],[5.4,.2]].forEach(([r,a])=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f*r;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*a,t+.02);g.gain.exponentialRampToValueAtTime(.0005,t+7);o.connect(g);g.connect(AU.m);o.start(t);o.stop(t+7.2)})}
 function bird(){const c=AU.c,t=c.currentTime,n=2+Math.floor(Math.random()*3),f=2200+Math.random()*1800;for(let i=0;i<n;i++){const o=c.createOscillator(),g=c.createGain(),s=t+i*.13;o.frequency.setValueAtTime(f,s);o.frequency.exponentialRampToValueAtTime(f*(1.2+Math.random()*.4),s+.09);g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.12,s+.02);g.gain.exponentialRampToValueAtTime(.001,s+.1);o.connect(g);g.connect(AU.m);o.start(s);o.stop(s+.12)}}
 function aMix(){if(!AU.c||!aOn)return;const h=H,t=AU.c.currentTime,day=h>=6&&h<17.5,dusk=h>=17.5&&h<19.5,night=!day&&!dusk;
-AU.w.gain.setTargetAtTime(night?.12:.2,t,2);AU.r.gain.setTargetAtTime(night?.1:.04,t,2);AU.k.gain.setTargetAtTime(night?.05:dusk?.02:0,t,2);
+AU.w.gain.setTargetAtTime(night?.025:.04,t,2);AU.r.gain.setTargetAtTime(night?.05:.02,t,2);AU.k.gain.setTargetAtTime(night?.05:dusk?.02:0,t,2);
 if(Math.random()<(day?.6:dusk?.15:0))bird();
 if(Date.now()>nextBowl){bowl(dusk?196:260,dusk?.3:.22);nextBowl=Date.now()+60000+Math.random()*60000}}
 setInterval(aMix,4000);
