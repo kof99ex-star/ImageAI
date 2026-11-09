@@ -37,6 +37,13 @@ body.nopanel .stage{right:0}
 #pl{width:36px;height:36px;flex:none;border-radius:50%;border:0;background:var(--green);color:#fff;cursor:pointer}
 .hp{right:14px;top:calc(64px + env(safe-area-inset-top,0px));max-width:240px;border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.6}
 .dpad{left:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(3,46px);gap:4px;background:none;box-shadow:none}.dpad button{height:46px;border:0;border-radius:12px;background:var(--card);color:var(--ink);font-size:18px;box-shadow:0 4px 14px rgba(0,0,0,.25);touch-action:none}.dpad[hidden]{display:none}.grp button[hidden]{display:none}
+.mm{display:none;right:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));border-radius:14px;padding:8px;width:256px}.mm canvas{width:240px;height:172px;border-radius:8px;display:block}#mi{font-size:12px;margin-top:6px;color:var(--mut);line-height:1.5}#ma,#mx{margin-top:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer}#mx[hidden],#ma[hidden]{display:none}
+body.fp .mm{display:block}
+.ut{right:14px;top:calc(14px + env(safe-area-inset-top,0px));border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer;z-index:7}.ut[hidden]{display:none}body.fp:not(.fpopen) .brand,body.fp:not(.fpopen) .top,body.fp:not(.fpopen) .rt{display:none}body.fp.fpopen .rt{right:104px}
+@media(max-width:760px){.mm{width:152px;padding:6px;bottom:calc(46vh + 10px)}.mm canvas{width:140px;height:100px}body.nopanel .mm{bottom:calc(16px + env(safe-area-inset-bottom,0px))}}
+.qcard{width:100%;text-align:left;border:1px solid var(--ac);background:var(--card);color:var(--ink);border-radius:14px;padding:12px 14px;margin-bottom:12px;cursor:pointer;font:inherit;display:block}.qcard b{display:block;color:var(--ac)}.qcard span{font-size:13px;color:var(--mut)}
+.qs{left:calc(16px + env(safe-area-inset-left,0px));top:calc(96px + env(safe-area-inset-top,0px));width:min(300px,calc(100% - 32px));border-radius:16px;padding:12px 14px;font-size:13px;line-height:1.6}.qs[hidden]{display:none}.qh{display:flex;justify-content:space-between;color:var(--ac);font-size:12px;font-weight:500}.qbar{height:4px;background:var(--line);border-radius:4px;margin:6px 0 8px;overflow:hidden}.qbar i{display:block;height:100%;background:var(--ac)}.qt{font:700 17px "Noto Serif TC",serif;margin-bottom:4px}.qs p{margin:0 0 8px}.qr{display:flex;flex-wrap:wrap;gap:6px}.qb{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:5px 10px;font:inherit;font-size:12px;cursor:pointer}.qb.pri{background:var(--green);color:#fff;border-color:var(--green)}.qx{margin-top:8px;border:0;background:none;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
+@media(max-width:760px){.qs{top:auto;bottom:calc(46vh + 10px);width:calc(100% - 180px);font-size:12px}body.nopanel .qs{bottom:calc(120px + env(safe-area-inset-bottom,0px))}}
 .tpn[hidden],.hp[hidden]{display:none}
 .hs{position:absolute;transform:translate(-50%,-100%);border:0;background:none;padding:0;pointer-events:auto;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:opacity .2s}
 .hs span{font:500 13px "Noto Sans TC",sans-serif;color:#23332E;background:rgba(255,255,255,.96);border-radius:999px;padding:3px 12px 3px 8px;box-shadow:0 2px 10px rgba(0,0,0,.25);white-space:nowrap}
@@ -97,8 +104,8 @@ body.nopanel #pn{transform:translateY(105%)}
     <div class="grp" id="tg" role="toolbar" aria-label="時段"><button data-h="7" title="清晨">晨</button><button data-h="12" class="cur" title="白天">日</button><button data-h="17.5" title="黃昏">昏</button><button data-h="22" title="夜晚">夜</button></div>
     <div class="grp" role="toolbar" aria-label="檢視控制"><button id="nm" aria-pressed="true">名牌</button><button id="pp" aria-pressed="true">家屬</button><button id="tm" aria-pressed="false">時間</button><button id="tp" aria-pressed="false">鳥瞰</button><button id="pz" aria-pressed="false">暫停</button><button id="vw" hidden>第三人稱</button><button id="fp" aria-pressed="false">漫遊</button><button id="mu" aria-pressed="false">♪ 音樂</button><input id="vol" type="range" min="0" max="1" step=".05" value=".35" aria-label="音量" hidden></div>
   </div>
-  <div class="fl rt"><button id="rs">⤢ 全景</button><button id="ls">☰ 清單</button><button id="hp" aria-pressed="false" aria-label="操作說明">?</button></div>
-  <div class="fl dpad" id="dp" hidden><button data-j="1">⤒</button><button data-k="w">▲</button><span></span><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><div class="fl hp" id="hpc" hidden>拖曳旋轉視角、滾輪或雙指縮放，點名牌查看介紹。小人是來參拜的家屬示意。</div>
+  <div class="fl rt"><button id="qb">任務</button><button id="rs">⤢ 全景</button><button id="ls">☰ 清單</button><button id="hp" aria-pressed="false" aria-label="操作說明">?</button></div>
+  <div class="fl qs" id="qs" hidden></div><div class="fl mm" id="mm"><canvas id="mc" width="240" height="172"></canvas><div id="mi">點選景點後，按「導航到這裡」</div><button id="ma" hidden>自動前往：開</button> <button id="mx" hidden>取消導航</button></div><div class="fl dpad" id="dp" hidden><button data-j="1">⤒</button><button data-k="w">▲</button><span></span><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><button class="fl ut" id="ut" hidden>☰ 選單</button><div class="fl hp" id="hpc" hidden>拖曳旋轉視角、滾輪或雙指縮放，點名牌查看介紹。小人是來參拜的家屬示意。</div>
   <div class="fl tpn" id="tpn" hidden><button id="pl" aria-label="播放或暫停時間">▶</button><div><input id="tr" type="range" min="0" max="24" step="0.1" value="12" aria-label="時刻"><div class="tk"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div></div><b id="tv">12:00</b></div>
 </div>
 
@@ -108,7 +115,7 @@ body.nopanel #pn{transform:translateY(105%)}
       <div class="eye">THE PARK INDEX</div>
       <h2>把思念，串起來。</h2>
       <p class="cnt" id="cnt"></p>
-      <input id="q" type="search" placeholder="搜尋：法會、停車、廁所、開放時間…" aria-label="搜尋園區內容" autocomplete="off">
+      <button class="qcard" id="q0"><b>第一次來訪？</b><span>跟著 6 個任務，從停車走到寶塔，把官網流程走一遍。</span></button><input id="q" type="search" placeholder="搜尋：法會、停車、廁所、開放時間…" aria-label="搜尋園區內容" autocomplete="off">
       <div id="sr" hidden></div>
       <div id="themes"><div class="tabs"><div>主題索引</div></div></div>
     </div>
@@ -185,7 +192,7 @@ function filt(t){hs.forEach(o=>o.el.classList.toggle("dim",t!=null&&o.it.ti!==t)
 $("#themes").addEventListener("toggle",e=>{const d=e.target;if(d.open){document.querySelectorAll("details.th").forEach(x=>{if(x!==d)x.open=false});filt(+d.dataset.t)}else if(![...document.querySelectorAll("details.th")].some(x=>x.open))filt(null)},true);
 function open(i){document.querySelectorAll(".hs").forEach(h=>h.classList.toggle("on",h.dataset.id===i.id));
 $("#dg").textContent=pad(i.ti)+" ・ "+i.th;$("#dt").textContent=i.n;$("#dd").textContent=i.d;
-$("#da").innerHTML=(i.u?`<a class="cta" href="${i.u}" target="_blank" rel="noopener">${i.a||"前往官網"}</a>`:"");
+$("#da").innerHTML=(i.u?`<a class="cta" href="${i.u}" target="_blank" rel="noopener">${i.a||"前往官網"}</a>`:"")+(i.p?`<button class="cta alt" data-nav="1">導航到這裡</button>`:"");window.curIt=i;
 pn.classList.add("det");document.body.classList.remove("nopanel");pn.querySelector(".pin").scrollTop=0;
 const o=hs.find(h=>h.it===i);if(o&&ctl&&!FP.on)fly=new THREE.Vector3(o.p.x,Math.min(o.p.y,8)*.5,o.p.z).multiplyScalar(3)}
 function back(){pn.classList.remove("det");document.querySelectorAll(".hs").forEach(h=>h.classList.remove("on"))}
@@ -419,7 +426,7 @@ const t=tgt({e:ne,d:nd,s:ns}),q=Math.min(1,dt*12),nx=w.px+(t[0]-w.px)*q,nz=w.pz+
 for(let j=0;j<walkers.length;j++){if(j===i)continue;const o=walkers[j],dn=Math.hypot(o.px-nx,o.pz-nz);if(dn<MD&&dn<Math.hypot(o.px-w.px,o.pz-w.pz)){bl=true;break}}
 if(bl){w.wait+=dt;if(w.wait>1.2){w.d=-w.d;w.s=Math.min(e.l,Math.max(0,w.s));w.wait=0}}else{w.wait=0;w.s=ns;w.e=ne;w.d=nd;w.px=nx;w.pz=nz;const hd=Math.atan2(t[2],t[3]);let da=hd-w.g.rotation.y;da=Math.atan2(Math.sin(da),Math.cos(da));w.g.rotation.y+=da*Math.min(1,dt*8)}
 const mv=!bl&&v>.01;if(mv)w.ph+=dt*v*14;const sw=mv?Math.sin(w.ph)*w.g.userData.amp:0,u=w.g.userData;u.l[0].rotation.x=sw;u.l[1].rotation.x=-sw;u.a[0].rotation.x=-sw;u.a[1].rotation.x=sw;w.g.position.set(w.px,.16,w.pz)})};
-walkers.forEach(w=>w.g.traverse(o=>o.userData.ex=true));CAT.traverse(o=>o.userData.ex=true)}
+window.NAVG={NP,ED,AD};walkers.forEach(w=>w.g.traverse(o=>o.userData.ex=true));CAT.traverse(o=>o.userData.ex=true)}
 {sc.traverse(o=>{if(o.isMesh&&o.geometry.type==="BoxGeometry"&&!Array.isArray(o.material)&&o.material.map){const P=o.geometry.parameters,u=o.geometry.attributes.uv,A=P.width/.8,B=P.height/.8,C=P.depth/.8,f=[[C,B],[C,B],[A,C],[A,C],[A,B],[A,B]];for(let i=0;i<24;i++){const q=f[i>>2];u.setXY(i,u.getX(i)*q[0],u.getY(i)*q[1])}u.needsUpdate=true}});
 sc.traverse(o=>{if(o.isMesh&&o.geometry.type==="BoxGeometry"&&!o.material.transparent&&!o.userData.ex)NG.walk.push(o)});const DEN=5,PT=.8/Math.sqrt(DEN),sq=1/Math.sqrt(DEN),sg=new THREE.CylinderGeometry(.24*sq,.24*sq,.14*sq,8),tmp=new THREE.Object3D(),bs=[];
 sc.traverse(o=>{if(o.isMesh&&o.geometry.type==="BoxGeometry"&&Math.abs(o.rotation.x)<.01&&Math.abs(o.rotation.z)<.01&&o.scale.x===1&&o.scale.y===1&&!o.userData.ns)bs.push(o)});
@@ -444,19 +451,20 @@ function fit(){const w=st.clientWidth,h=st.clientHeight;ren.setSize(w,h,false);c
 new ResizeObserver(fit).observe(st);
 (function tick(){const dt=Math.min(clk.getDelta(),.1);if(!paused){if(playing){H=(H+dt*.6)%24;setH(H)}window.stepWalkers&&stepWalkers(dt);clouds.forEach(c=>{c.position.x+=c.userData.v*dt;if(c.position.x>170)c.position.x=-170})}
 if(fly){const d=fly.clone().sub(ctl.target).multiplyScalar(Math.min(1,dt*4));ctl.target.add(d);cam.position.add(d);if(d.length()<.02)fly=null}
-if(window.NG)NG.upd(clk.elapsedTime,paused?0:dt,NG.nf||0);if(FP.on)fpStep(dt);if(eagle)eagle.rotation.y=Math.atan2(cam.position.x-eagle.position.x,cam.position.z-eagle.position.z);if(!FP.on)ctl.update();ren.render(sc,cam);const w=st.clientWidth,h=st.clientHeight;hs.forEach(o=>{const wp=o.p.clone().multiplyScalar(3),v=wp.clone().project(cam),dd=cam.position.distanceTo(wp);o.el.style.display=v.z<1&&(!FP.on||dd<120)?"":"none";o.el.style.opacity=FP.on?Math.max(.45,1.2-dd/120):"";o.el.style.left=(v.x*.5+.5)*w+"px";o.el.style.top=(-v.y*.5+.5)*h+"px"});requestAnimationFrame(tick)})();
+if(window.NG)NG.upd(clk.elapsedTime,paused?0:dt,NG.nf||0);if(window.navTick)navTick(dt);if(FP.on)fpStep(dt);if(eagle)eagle.rotation.y=Math.atan2(cam.position.x-eagle.position.x,cam.position.z-eagle.position.z);if(!FP.on)ctl.update();ren.render(sc,cam);const w=st.clientWidth,h=st.clientHeight;hs.forEach(o=>{const wp=o.p.clone().multiplyScalar(3),v=wp.clone().project(cam),dd=cam.position.distanceTo(wp);o.el.style.display=v.z<1&&(!FP.on||dd<120)?"":"none";o.el.style.opacity=FP.on?Math.max(.45,1.2-dd/120):"";o.el.style.left=(v.x*.5+.5)*w+"px";o.el.style.top=(-v.y*.5+.5)*h+"px"});requestAnimationFrame(tick)})();
 const rc=new THREE.Raycaster(),dn=new THREE.Vector3(0,-1,0),ky=FP.k;let sv=null;
 function gh(x,z,from){rc.set(new THREE.Vector3(x,from,z),dn);const h=rc.intersectObjects(NG.walk,false)[0];return h?h.point.y:0}
 function fpStep(dt){const f=(ky.w||ky.ArrowUp?1:0)-(ky.s||ky.ArrowDown?1:0),r=(ky.d||ky.ArrowRight?1:0)-(ky.a||ky.ArrowLeft?1:0),sp2=(FP.run||ky.Shift?10:5)*dt;
-if(f||r){const mx=-Math.sin(FP.yaw)*f+Math.cos(FP.yaw)*r,mz=-Math.cos(FP.yaw)*f-Math.sin(FP.yaw)*r;FP.th=Math.atan2(mx,mz);const nx=FP.x+mx*sp2,nz=FP.z+mz*sp2;if(Math.abs(nx)<104&&Math.abs(nz)<74){const h=gh(nx,nz,60);const ft=FP.gy+FP.off;if(FP.off>.05?h<=ft+.3:h-FP.gy<=1.6){if(h>FP.gy&&FP.off<=.05)FP.so-=h-FP.gy;FP.x=nx;FP.z=nz;FP.gy=h;FP.off=Math.max(0,ft-h)}}}
-FP.vy-=24*dt;FP.off+=FP.vy*dt;if(FP.off<0){FP.off=0;FP.vy=0}FP.so-=FP.so*Math.min(1,dt*10);const ey=FP.gy+FP.off+.85+FP.so;
+let mvOn=false,mx=0,mz=0;if(f||r){if(FP.auto)setAuto(false);mx=-Math.sin(FP.yaw)*f+Math.cos(FP.yaw)*r;mz=-Math.cos(FP.yaw)*f-Math.sin(FP.yaw)*r;mvOn=true}else if(FP.auto&&NV.on){const p=nextWp();if(p){const dx=p[0]*3-FP.x,dz=p[1]*3-FP.z,d=Math.hypot(dx,dz);if(d>.01){const ty=Math.atan2(-dx,-dz);let dy=ty-FP.yaw;dy=Math.atan2(Math.sin(dy),Math.cos(dy));FP.yaw+=dy*Math.min(1,dt*5);const k=Math.max(.25,Math.cos(Math.min(1.4,Math.abs(dy))));mx=-Math.sin(FP.yaw)*k;mz=-Math.cos(FP.yaw)*k;mvOn=true}}}
+if(mvOn){FP.th=Math.atan2(mx,mz);const nx=FP.x+mx*sp2,nz=FP.z+mz*sp2;if(Math.abs(nx)<104&&Math.abs(nz)<74){const h=gh(nx,nz,60);const ft=FP.gy+FP.off;if(FP.off>.05?h<=ft+.3:h-FP.gy<=1.6){if(h>FP.gy&&FP.off<=.05)FP.so-=h-FP.gy;FP.x=nx;FP.z=nz;FP.gy=h;FP.off=Math.max(0,ft-h)}}}
+if(FP.auto&&mvOn){const mvd=Math.hypot(FP.x-(FP.lx||FP.x),FP.z-(FP.lz||FP.z));FP.stuck=mvd<.005?(FP.stuck||0)+dt:0;if(FP.stuck>1&&FP.stuck<1.2&&FP.off<=.05)FP.vy=9;if(FP.stuck>4){setAuto(false);$("#mi").textContent="路徑被擋住，請手動前往"}}else FP.stuck=0;FP.lx=FP.x;FP.lz=FP.z;FP.vy-=24*dt;FP.off+=FP.vy*dt;if(FP.off<0){FP.off=0;FP.vy=0}FP.so-=FP.so*Math.min(1,dt*10);const ey=FP.gy+FP.off+.85+FP.so;
 if(FP.view===1){cam.position.set(FP.x,ey,FP.z);cam.rotation.set(FP.pitch,FP.yaw,0,"YXZ");CAT.visible=false;FP.th=FP.yaw+Math.PI}
 else{const el=Math.max(.05,Math.min(1.2,.35-FP.pitch*.6)),D=6;cam.position.set(FP.x+Math.sin(FP.yaw)*D*Math.cos(el),ey+.4+D*Math.sin(el),FP.z+Math.cos(FP.yaw)*D*Math.cos(el));cam.lookAt(FP.x,ey,FP.z);CAT.visible=true}
-const da=Math.atan2(Math.sin(FP.th-FP.cr),Math.cos(FP.th-FP.cr));FP.cr+=da*Math.min(1,dt*10);const mvg=(f||r)&&FP.off<=.05;FP.ph+=mvg?dt*(FP.run||ky.Shift?22:14):0;const sw=mvg?Math.sin(FP.ph)*.7:0,cu=CAT.userData;
+const da=Math.atan2(Math.sin(FP.th-FP.cr),Math.cos(FP.th-FP.cr));FP.cr+=da*Math.min(1,dt*10);const mvg=mvOn&&FP.off<=.05;FP.ph+=mvg?dt*(FP.run||ky.Shift?22:14):0;const sw=mvg?Math.sin(FP.ph)*.7:0,cu=CAT.userData;
 CAT.position.set(FP.x/3,(FP.gy+FP.off)/3,FP.z/3);CAT.rotation.y=FP.cr;cu.legs.forEach((l,i)=>l.rotation.x=(i===0||i===3?sw:-sw));cu.tail.rotation.z=Math.sin(performance.now()/350)*.3;fpHud()}
-function fpSet(on){FP.on=on;$("#fp").setAttribute("aria-pressed",on);$("#dp").hidden=!on;$("#vw").hidden=!on;xh.style.display="none";if(!on){pr.style.display=ty.style.display="none";FP.tg=null;FP.last=null}ctl.enabled=!on;document.body.classList.toggle("nopanel",on);
+function fpSet(on){FP.on=on;$("#fp").setAttribute("aria-pressed",on);$("#dp").hidden=!on;$("#vw").hidden=!on;document.body.classList.toggle("fp",on);if(!on)document.body.classList.remove("fpopen");$("#ut").hidden=!on;$("#ut").textContent="☰ 選單";xh.style.display="none";if(!on){pr.style.display=ty.style.display="none";FP.tg=null;FP.last=null}ctl.enabled=!on;document.body.classList.toggle("nopanel",on);
 if(on){sv=[cam.position.clone(),ctl.target.clone()];FP.x=-23;FP.z=58;FP.gy=gh(FP.x,FP.z,60);FP.off=0;FP.vy=0;FP.so=0;FP.yaw=0;FP.view=3;FP.cr=FP.th=FP.ph=0;CAT.visible=true;$("#vw").textContent="第三人稱";FP.pitch=0;cam.fov=65;cam.updateProjectionMatrix();FP.run=false;FP.msg="漫遊模式：W A S D 或方向鍵移動，空白鍵跳躍，R 切換加速，V 切換第一／第三人稱視角，拖曳畫面轉動視角，點名牌或建築可查看資訊，Esc 離開。";$("#hpc").textContent=FP.msg;document.activeElement&&document.activeElement.blur();$("#hpc").hidden=false}
-else{CAT.visible=false;cam.rotation.order="XYZ";cam.fov=40;cam.updateProjectionMatrix();if(sv){cam.position.copy(sv[0]);ctl.target.copy(sv[1])}ctl.update();$("#hpc").hidden=true}}
+else{if(NV.on)navDone(false);CAT.visible=false;cam.rotation.order="XYZ";cam.fov=40;cam.updateProjectionMatrix();if(sv){cam.position.copy(sv[0]);ctl.target.copy(sv[1])}ctl.update();$("#hpc").hidden=true}}
 $("#fp").onclick=()=>fpSet(!FP.on);
 addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;if(e.key.toLowerCase()==="v"&&FP.on&&!e.repeat)fpView();if(e.key.toLowerCase()==="e"&&FP.on&&FP.tg)open(FP.tg);if(e.key===" "&&FP.on){e.preventDefault();if(FP.off<=.05)FP.vy=9}if(e.key.toLowerCase()==="r"&&FP.on&&!e.repeat){FP.run=!FP.run;$("#hpc").textContent=FP.msg+(FP.run?"　【加速中】":"")}if(e.key==="Escape"&&FP.on)fpSet(false);ky[e.key.length==1?e.key.toLowerCase():e.key]=true});
 addEventListener("keyup",e=>{if(e.key===" "&&FP.on)e.preventDefault();ky[e.key.length==1?e.key.toLowerCase():e.key]=false});
@@ -465,7 +473,8 @@ function pick(e){const r=cv.getBoundingClientRect();mv.set((e.clientX-r.left)/r.
 cv.addEventListener("pointerdown",e=>{d0=[e.clientX,e.clientY];ds=[e.clientX,e.clientY]});addEventListener("pointerup",()=>d0=null);
 cv.addEventListener("pointerup",e=>{if(ds&&Math.hypot(e.clientX-ds[0],e.clientY-ds[1])<6){const it=pick(e);if(it)open(it)}ds=null});
 cv.addEventListener("pointermove",e=>{if(FP.on&&d0){FP.yaw-=(e.clientX-d0[0])*.005;FP.pitch=Math.max(-1.2,Math.min(1.2,FP.pitch-(e.clientY-d0[1])*.005));d0=[e.clientX,e.clientY];tipEl.style.display="none";return}
-const n=performance.now();if(d0||n-lt<60)return;lt=n;const it=pick(e),r=st.getBoundingClientRect();cv.style.cursor=it?"pointer":"";if(it){tipEl.textContent=it.n;tipEl.style.left=e.clientX-r.left+"px";tipEl.style.top=e.clientY-r.top+"px";tipEl.style.display="block"}else tipEl.style.display="none"});
+return;const it=null,r=null;cv.style.cursor="";if(it){tipEl.textContent=it.n;tipEl.style.left=e.clientX-r.left+"px";tipEl.style.top=e.clientY-r.top+"px";tipEl.style.display="block"}else tipEl.style.display="none"});
+
 document.querySelectorAll("#dp button").forEach(b=>{const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();if(b.dataset.j){if(FP.off<=.05)FP.vy=9}else ky[k]=true};b.onpointerup=b.onpointerleave=()=>ky[k]=false});
 const xh=document.createElement("div"),pr=document.createElement("div"),ty=document.createElement("div");
 xh.style.cssText="position:absolute;left:50%;top:50%;width:16px;height:16px;transform:translate(-50%,-50%);pointer-events:none;z-index:6;display:none;background:linear-gradient(#fff,#fff) center/2px 100% no-repeat,linear-gradient(#fff,#fff) center/100% 2px no-repeat;filter:drop-shadow(0 0 2px #000)";
@@ -473,16 +482,57 @@ pr.style.cssText="position:absolute;left:50%;bottom:110px;transform:translateX(-
 ty.style.cssText="position:absolute;left:50%;top:84px;transform:translateX(-50%);z-index:6;width:min(380px,calc(100% - 28px));background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:12px 16px;box-shadow:0 8px 26px rgba(0,0,0,.3);display:none;font-size:14px;line-height:1.6";
 st.append(xh,pr,ty);pr.onclick=()=>{if(FP.tg)open(FP.tg)};
 function fpView(){FP.view=FP.view===1?3:1;$("#vw").textContent=FP.view===1?"第一人稱":"第三人稱";xh.style.display=FP.view===1?"block":"none";CAT.visible=FP.view===3}
-$("#vw").onclick=()=>fpView();
+$("#vw").onclick=()=>fpView();$("#ut").onclick=()=>{const o=document.body.classList.toggle("fpopen");$("#ut").textContent=o?"✕ 收起":"☰ 選單"};
 function fpHud(){const now=performance.now();let near=null,nd=1e9;hs.forEach(o=>{const d=Math.hypot(o.p.x*3-FP.x,o.p.z*3-FP.z);if(d<nd){nd=d;near=o}});
 if(now-(FP.pt||0)>120){FP.pt=now;const r0=cv.getBoundingClientRect();FP.aim=pick({clientX:r0.left+r0.width/2,clientY:r0.top+r0.height/2})}
-const ao=FP.aim&&hs.find(o=>o.it===FP.aim),ad=ao?Math.hypot(ao.p.x*3-FP.x,ao.p.z*3-FP.z):1e9,t=ao&&ad<60?FP.aim:nd<26?near.it:null;
+const ao=FP.aim&&hs.find(o=>o.it===FP.aim),ad=ao?Math.hypot(ao.p.x*3-FP.x,ao.p.z*3-FP.z):1e9,t=null;
 if(t!==FP.tg){FP.tg=t;pr.style.display=t?"block":"none";if(t)pr.textContent="按 E 查看　"+t.n}
 if(false){FP.last=near.it;ty.innerHTML=`<b>${near.it.n}</b><br>${near.it.d.slice(0,70)}${near.it.d.length>70?"…":""}<br><small style="color:var(--mut)">按 E 或點選名牌查看完整資訊</small>`;ty.style.display="block";FP.tt=now}
 if(nd>=26)FP.last=null;
 }
 ov.addEventListener("mouseover",e=>{const g=e.target.closest(".hs");if(!g)return;const i=all.find(x=>x.id===g.dataset.id);if(!i)return;const r=g.getBoundingClientRect(),sr=st.getBoundingClientRect();ty.innerHTML=`<b>${i.n}</b><br>${i.d.slice(0,90)}${i.d.length>90?"…":""}<br><small style="color:var(--mut)">點擊名牌查看完整資訊</small>`;ty.style.transform="translateX(-50%)";ty.style.left=Math.max(200,Math.min(sr.width-200,r.left-sr.left+r.width/2))+"px";ty.style.top=(r.bottom-sr.top+8)+"px";ty.style.display="block"});
 ov.addEventListener("mouseout",e=>{if(e.target.closest(".hs"))ty.style.display="none"});
+const NV={on:false,it:null,o:null,pts:[],cum:[0],tl:1,t:0,lt:0,f:0},mx2=$("#mc").getContext("2d"),NG0=new THREE.Group();sc.add(NG0);
+const goldM=new THREE.MeshBasicMaterial({color:0xFFC83A}),beaM=new THREE.MeshBasicMaterial({color:0xFFE08A,transparent:true,opacity:.35,depthWrite:false,blending:THREE.AdditiveBlending}),dots=[];
+for(let i=0;i<14;i++){const d=new THREE.Mesh(new THREE.BoxGeometry(.35,.35,.35),goldM);d.visible=false;NG0.add(d);dots.push(d)}
+const beacon=new THREE.Mesh(new THREE.BoxGeometry(.8,16,.8),beaM);beacon.visible=false;NG0.add(beacon);let segs=[];
+function proj(x,z){const G=NAVG;let b=null;G.ED.forEach((e,i)=>{const A=G.NP[e.a],t=Math.max(0,Math.min(e.l,(x-A[0])*e.ux+(z-A[1])*e.uz)),px=A[0]+e.ux*t,pz=A[1]+e.uz*t,d=Math.hypot(x-px,z-pz);if(!b||d<b.d)b={e:i,s:t,x:px,z:pz,d}});return b}
+function route(sx,sz,dx,dz){const G=NAVG,S=proj(sx,sz),D=proj(dx,dz),n=G.NP.length,dist=Array(n).fill(1e9),prev=Array(n).fill(-1),done=Array(n).fill(false),eS=G.ED[S.e],eD=G.ED[D.e];dist[eS.a]=S.s;dist[eS.b]=eS.l-S.s;
+for(let k=0;k<n;k++){let u=-1;for(let i=0;i<n;i++)if(!done[i]&&(u<0||dist[i]<dist[u]))u=i;if(u<0||dist[u]>=1e9)break;done[u]=true;G.AD[u].forEach(ei=>{const e=G.ED[ei],v=e.a===u?e.b:e.a;if(dist[u]+e.l<dist[v]){dist[v]=dist[u]+e.l;prev[v]=u}})}
+const vA=dist[eD.a]+D.s,vB=dist[eD.b]+eD.l-D.s,same=S.e===D.e?Math.abs(S.s-D.s):1e9;let pts,len;
+if(same<=Math.min(vA,vB)){pts=[[S.x,S.z],[D.x,D.z]];len=same}else{let c=vA<=vB?eD.a:eD.b;len=Math.min(vA,vB);const path=[];while(c>=0){path.unshift(c);c=prev[c]}pts=[[S.x,S.z],...path.map(i=>G.NP[i]),[D.x,D.z]]}
+return{pts:[[sx,sz],...pts,[dx,dz]],len:len+S.d+D.d}}
+function navCalc(){const o=NV.o,r=route(FP.on?FP.x/3:-7.85,FP.on?FP.z/3:6.55,o.p.x,o.p.z);NV.pts=r.pts;NV.len=r.len;NV.idx=1;segs.forEach(s=>{NG0.remove(s);s.geometry.dispose()});segs=[];NV.cum=[0];
+for(let i=1;i<r.pts.length;i++){const a=r.pts[i-1],b=r.pts[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);NV.cum.push(NV.cum[i-1]+l);if(l<.05)continue;const m=new THREE.Mesh(new THREE.BoxGeometry(l,.05,.45),goldM);m.position.set((a[0]+b[0])/2,.26,(a[1]+b[1])/2);m.rotation.y=-Math.atan2(b[1]-a[1],b[0]-a[0]);NG0.add(m);segs.push(m)}
+NV.tl=Math.max(.1,NV.cum[NV.cum.length-1]);beacon.position.set(o.p.x,8,o.p.z);beacon.visible=true;dots.forEach(d=>d.visible=true);$("#mi").textContent="導航："+NV.it.n+"　約 "+Math.round(r.len*2.55)+" 公尺"}
+function navTo(it){const o=hs.find(h=>h.it===it&&it.p);if(!o)return;if(!FP.on)fpSet(true);NV.it=it;NV.o=o;NV.on=true;NV.lt=0;navCalc();$("#mx").hidden=false;$("#ma").hidden=false;setAuto(true);document.body.classList.add("nopanel")}
+function setAuto(v){FP.auto=v;$("#ma").textContent=v?"自動前往：開":"自動前往：關"}
+function nextWp(){const P=NV.pts;while(NV.idx<P.length-1){const p=P[NV.idx];if(Math.hypot(p[0]*3-FP.x,p[1]*3-FP.z)<2)NV.idx++;else break}return P[Math.min(NV.idx,P.length-1)]}
+function devi(){const P=NV.pts;let b=1e9;for(let i=1;i<P.length;i++){const a=P[i-1],c=P[i],vx=c[0]-a[0],vz=c[1]-a[1],l2=vx*vx+vz*vz||1,t=Math.max(0,Math.min(1,((FP.x/3-a[0])*vx+(FP.z/3-a[1])*vz)/l2)),d=Math.hypot(FP.x/3-(a[0]+vx*t),FP.z/3-(a[1]+vz*t));if(d<b)b=d}return b}
+function navDone(ok){const nm=NV.it?NV.it.n:"";NV.on=false;segs.forEach(s=>{NG0.remove(s);s.geometry.dispose()});segs=[];dots.forEach(d=>d.visible=false);beacon.visible=false;$("#mx").hidden=true;$("#ma").hidden=true;FP.auto=false;$("#mi").textContent=ok?"已抵達："+nm:"已取消導航";if(ok&&Q.on&&Q.i<QS.length){const s=QS[Q.i];if(NV.it===qItem(s.id)&&s.auto!==false)qNext(true)}}
+$("#da").onclick=e=>{if(e.target.dataset.nav&&window.curIt)navTo(window.curIt)};$("#mx").onclick=()=>navDone(false);$("#ma").onclick=()=>setAuto(!FP.auto);
+function mmDraw(){const c=mx2,k=3,X=x=>120+x*k,Z=z=>86+z*k;c.clearRect(0,0,240,172);c.fillStyle="#bfe0ee";c.fillRect(0,0,240,172);c.fillStyle="#9bd596";c.fillRect(X(-36),Z(-26),72*k,52*k);c.fillStyle="#6aa06a";c.fillRect(X(2),Z(-22),34*k,18*k);c.fillStyle="#a9a79f";c.fillRect(X(-15),Z(-21.7),10.6*k,13*k);c.fillStyle="#8cc4e6";c.fillRect(X(-30),Z(3.3),7*k,11*k);
+c.strokeStyle="#b9ae96";c.lineWidth=5;c.lineCap="round";NAVG.ED.forEach(e=>{const A=NAVG.NP[e.a],B=NAVG.NP[e.b];c.beginPath();c.moveTo(X(A[0]),Z(A[1]));c.lineTo(X(B[0]),Z(B[1]));c.stroke()});
+if(NV.on&&NV.pts.length>1){c.strokeStyle="#E0622D";c.lineWidth=3;c.setLineDash([6,4]);c.beginPath();NV.pts.forEach((p,i)=>i?c.lineTo(X(p[0]),Z(p[1])):c.moveTo(X(p[0]),Z(p[1])));c.stroke();c.setLineDash([])}
+c.font="10px sans-serif";c.textAlign="center";hs.forEach(o=>{if(!o.it.p)return;const x=X(o.p.x),z=Z(o.p.z),on=NV.on&&NV.it===o.it;c.fillStyle=on?"#E0622D":"#B8892F";c.beginPath();c.arc(x,z,on?5:3,0,7);c.fill();if(on||"pagoda pf office gate furn paper four earth".includes(o.it.id)){c.fillStyle="#23332E";c.fillText((o.it.s||o.it.n).slice(0,5),x,z-6)}});
+let px,pz,dx,dz;if(FP.on){px=FP.x/3;pz=FP.z/3;dx=-Math.sin(FP.yaw);dz=-Math.cos(FP.yaw)}else{px=ctl.target.x/3;pz=ctl.target.z/3;dx=ctl.target.x-cam.position.x;dz=ctl.target.z-cam.position.z}
+c.save();c.translate(X(px),Z(pz));c.rotate(Math.atan2(dz,dx));c.fillStyle="#d62828";c.strokeStyle="#fff";c.lineWidth=1.5;c.beginPath();c.moveTo(8,0);c.lineTo(-5,-5);c.lineTo(-3,0);c.lineTo(-5,5);c.closePath();c.fill();c.stroke();c.restore()}
+window.navTick=dt=>{if(++NV.f%3===0)mmDraw();if(!NV.on)return;NV.t+=dt;NV.lt+=dt;beaM.opacity=.25+.15*Math.sin(NV.t*3);
+if(FP.on){if(Math.hypot(FP.x/3-NV.o.p.x,FP.z/3-NV.o.p.z)<(NV.it.id==="pagoda"?9:6)){navDone(true);return}if(NV.lt>2){NV.lt=0;if(devi()>3)navCalc()}}
+dots.forEach((d,i)=>{const u=(NV.t*2+i*NV.tl/dots.length)%NV.tl;let j=1;while(j<NV.cum.length-1&&NV.cum[j]<u)j++;const a=NV.pts[j-1],b=NV.pts[j],l=NV.cum[j]-NV.cum[j-1]||1,f=(u-NV.cum[j-1])/l;d.position.set(a[0]+(b[0]-a[0])*f,.5,a[1]+(b[1]-a[1])*f)})};
+const QS=[{id:"pf",t:"停好車",d:"塔前停車場位於寶塔正前方，設有身心障礙與親子相關車位標示。也可以停在 A區汽車停車場、機車停車場，或產業道路旁的一、二、三號汽車停車場。"},
+{id:"gate",t:"經過守衛室",d:"守衛室位於產業道路旁，靠近大門處，旁有洗手間。"},
+{id:"office",t:"到行政辦公室辦理手續",d:"行政辦公室設有服務台與性別友善廁所，是辦理申辦手續的地點。開放時間：週一至週五 08:30～12:00、13:00～17:00，例假日休假。"},
+{id:"pagoda",t:"前往寶塔入口",d:"寶塔入口附近設有服務台、無障礙坡道、無障礙電梯、洗手間、性別友善廁所與緊急心臟除顫器（AED）。寶塔每日 08:30～17:00，星期六 08:30～16:30，除夕與大年初一至初三另有時間，請以官網為準。"},
+{id:"pagoda",auto:false,t:"進入寶塔參拜",d:"寶塔內規劃有挑高大廳的大雄寶殿，供奉地藏王菩薩及華嚴三聖；也設有中西式祭拜廳，可依家屬習慣選擇祭拜方式。各樓層為 1F、大殿、2F、3F、DF 及 5F 至 14F。"},
+{id:"furn",t:"紙錢與環保金爐",d:"環保金爐位於寶塔左前方，導覽圖標示於塔前停車場上方。紙錢集中區位於園區左上方；法會期間另設紙錢統一集中區與紙錢販賣處。"}];
+const Q={on:false,i:0},qe=$("#qs"),qItem=id=>all.find(x=>x.id===id);
+function qRender(){if(!Q.on){qe.hidden=true;return}qe.hidden=false;
+if(Q.i>=QS.length){qe.innerHTML=`<div class="qh"><span>第一次來訪</span><span>完成</span></div><div class="qbar"><i style="width:100%"></i></div><div class="qt">任務完成</div><p>第一次來訪的流程走完了。如需法會報名，可以查看報名辦法。</p><div class="qr"><button class="qb pri" data-q="rite">查看法會報名辦法</button><button class="qb" data-q="end">結束</button></div>`;return}
+const s=QS[Q.i];qe.innerHTML=`<div class="qh"><span>第一次來訪</span><span>${Q.i+1} / ${QS.length}</span></div><div class="qbar"><i style="width:${Q.i/QS.length*100}%"></i></div><div class="qt">${s.t}</div><p>${s.d}</p><div class="qr"><button class="qb pri" data-q="nav">導航過去</button><button class="qb" data-q="info">詳細資訊</button><button class="qb" data-q="next">${Q.i<QS.length-1?"完成，下一步":"完成任務"}</button></div><small style="display:block;margin-top:6px;color:var(--mut)">漫遊模式下走到目的地會自動完成，也可以直接按「完成」。</small><button class="qx" data-q="end">結束任務</button>`}
+function qNext(auto){Q.i++;qRender();if(Q.i<QS.length)setTimeout(()=>{if(Q.on)navTo(qItem(QS[Q.i].id))},auto?1500:0);else if(NV.on)navDone(false)}
+qe.onclick=e=>{const k=e.target.dataset.q;if(!k)return;const s=QS[Q.i];if(k==="nav")navTo(qItem(s.id));else if(k==="info")open(qItem(s.id));else if(k==="next")qNext(false);else if(k==="rite")open(qItem("rite"));else if(k==="end"){Q.on=false;qRender();if(NV.on)navDone(false)}};
+$("#q0").onclick=$("#qb").onclick=()=>{Q.on=true;Q.i=0;qRender();navTo(qItem(QS[0].id));document.body.classList.add("nopanel")};
 const tg=(id,fn)=>{$(id).onclick=e=>{const b=e.currentTarget,on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on);fn(on)}};
 $("#rs").onclick=()=>{home();back();filt(null);document.querySelectorAll("details.th").forEach(x=>x.open=false)};
 $("#ls").onclick=()=>document.body.classList.toggle("nopanel");
