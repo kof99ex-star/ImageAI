@@ -48,6 +48,18 @@ body.fp .mm{display:block}
 .tpn{bottom:calc(96px + env(safe-area-inset-bottom,0px))}body.fp:not(.fpopen) .dock,body.fp:not(.fpopen) .more{display:none}
 .wl{position:absolute;inset:0;z-index:40;background:rgba(20,28,25,.55);display:flex;align-items:center;justify-content:center;padding:16px}.wl[hidden]{display:none}.wc{background:var(--card);border-radius:22px;padding:22px;width:min(460px,100%);max-height:100%;overflow:auto}.wc h2{font-size:24px;margin-bottom:14px}.ws{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px;font-size:17px}.ws b{font-size:30px}.ws strong{display:block}.wc button{width:100%;padding:14px;border:0;border-radius:14px;background:var(--ac);color:#fff;font:inherit;font-size:18px;cursor:pointer}
 .kid{background:rgba(255,200,60,.25);color:var(--ink);border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:16px}
+.pcl{display:none}.dock button i{font-style:normal;margin-right:6px}
+@media(max-width:760px){
+.brand{left:8px;top:calc(8px + env(safe-area-inset-top,0px));padding:6px 12px;border-radius:14px}.brand h1{font-size:15px;letter-spacing:.02em}
+.dock{width:calc(100% - 16px);border-radius:20px;padding:6px;gap:4px;flex-wrap:nowrap;justify-content:space-between;bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+.dock button{flex:1;min-width:0;padding:6px 2px;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:14px;font-size:11px}.dock button i{font-size:22px;line-height:1;margin:0}
+.more{width:calc(100% - 16px);bottom:calc(76px + env(safe-area-inset-bottom,0px));max-height:52vh}
+.tpn,body.nopanel .tpn{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+#pn{height:42vh}.pin{padding:46px 16px 10px}.pcl{display:block;position:absolute;top:8px;right:12px;z-index:3;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:14px;cursor:pointer}
+.hs span{font-size:11px;padding:2px 8px 2px 6px}.hs b{margin-right:4px}
+.hp{display:none!important}
+body .qs,body.nopanel .qs{top:calc(50px + env(safe-area-inset-top,0px));bottom:auto;left:8px;width:calc(100% - 16px);padding:8px 12px}.qs p,.qs small{display:none}.qt{font-size:15px}
+}
 @media(max-width:760px){.mm{width:152px;padding:6px;bottom:calc(46vh + 10px)}.mm canvas{width:140px;height:100px}body.nopanel .mm{bottom:calc(16px + env(safe-area-inset-bottom,0px))}}
 .qcard{width:100%;text-align:left;border:1px solid var(--ac);background:var(--card);color:var(--ink);border-radius:14px;padding:12px 14px;margin-bottom:12px;cursor:pointer;font:inherit;display:block}.qcard b{display:block;color:var(--ac)}.qcard span{font-size:13px;color:var(--mut)}
 .qs{left:calc(16px + env(safe-area-inset-left,0px));top:calc(96px + env(safe-area-inset-top,0px));width:min(300px,calc(100% - 32px));border-radius:16px;padding:12px 14px;font-size:13px;line-height:1.6}.qs[hidden]{display:none}.qh{display:flex;justify-content:space-between;color:var(--ac);font-size:12px;font-weight:500}.qbar{height:4px;background:var(--line);border-radius:4px;margin:6px 0 8px;overflow:hidden}.qbar i{display:block;height:100%;background:var(--ac)}.qt{font:700 17px "Noto Serif TC",serif;margin-bottom:4px}.qs p{margin:0 0 8px}.qr{display:flex;flex-wrap:wrap;gap:6px}.qb{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:5px 10px;font:inherit;font-size:12px;cursor:pointer}.qb.pri{background:var(--green);color:#fff;border-color:var(--green)}.qx{margin-top:8px;border:0;background:none;color:var(--mut);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
@@ -117,7 +129,7 @@ body.nopanel #pn{transform:translateY(105%)}
   <div class="fl tpn" id="tpn" hidden><button id="pl" aria-label="播放或暫停時間">▶</button><div><input id="tr" type="range" min="0" max="24" step="0.1" value="12" aria-label="時刻"><div class="tk"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div></div><b id="tv">12:00</b></div>
 </div>
 
-<aside id="pn" aria-label="園區內容索引">
+<aside id="pn" aria-label="園區內容索引"><button class="pcl" id="pcl">✕ 收起</button>
   <div class="pin">
     <div id="vl">
       <div class="eye">地方清單</div>
@@ -509,7 +521,7 @@ if(t!==FP.tg){FP.tg=t;pr.style.display=t?"block":"none";if(t)pr.textContent="按
 if(false){FP.last=near.it;ty.innerHTML=`<b>${near.it.n}</b><br>${near.it.d.slice(0,70)}${near.it.d.length>70?"…":""}<br><small style="color:var(--mut)">按 E 或點選名牌查看完整資訊</small>`;ty.style.display="block";FP.tt=now}
 if(nd>=26)FP.last=null;
 }
-ov.addEventListener("mouseover",e=>{const g=e.target.closest(".hs");if(!g)return;const i=all.find(x=>x.id===g.dataset.id);if(!i)return;const r=g.getBoundingClientRect(),sr=st.getBoundingClientRect();ty.innerHTML=`<b>${i.n}</b><br>${i.d.slice(0,90)}${i.d.length>90?"…":""}<br><small style="color:var(--mut)">點擊名牌查看完整資訊</small>`;ty.style.transform="translateX(-50%)";ty.style.left=Math.max(200,Math.min(sr.width-200,r.left-sr.left+r.width/2))+"px";ty.style.top=(r.bottom-sr.top+8)+"px";ty.style.display="block"});
+ov.addEventListener("mouseover",e=>{if(matchMedia("(hover:none)").matches)return;const g=e.target.closest(".hs");if(!g)return;const i=all.find(x=>x.id===g.dataset.id);if(!i)return;const r=g.getBoundingClientRect(),sr=st.getBoundingClientRect();ty.innerHTML=`<b>${i.n}</b><br>${i.d.slice(0,90)}${i.d.length>90?"…":""}<br><small style="color:var(--mut)">點擊名牌查看完整資訊</small>`;ty.style.transform="translateX(-50%)";ty.style.left=Math.max(200,Math.min(sr.width-200,r.left-sr.left+r.width/2))+"px";ty.style.top=(r.bottom-sr.top+8)+"px";ty.style.display="block"});
 ov.addEventListener("mouseout",e=>{if(e.target.closest(".hs"))ty.style.display="none"});
 const NV={on:false,it:null,o:null,pts:[],cum:[0],tl:1,t:0,lt:0,f:0},mx2=$("#mc").getContext("2d"),NG0=new THREE.Group();sc.add(NG0);
 const goldM=new THREE.MeshBasicMaterial({color:0xFFC83A}),beaM=new THREE.MeshBasicMaterial({color:0xFFE08A,transparent:true,opacity:.35,depthWrite:false,blending:THREE.AdditiveBlending}),dots=[];
@@ -566,7 +578,9 @@ ov.addEventListener("click",e=>{const g=e.target.closest(".hs");if(g)open(all.fi
 {const dk=$("#dock"),mr=$("#more");["fp","qb","ls","mu"].forEach(id=>dk.append($("#"+id)));dk.insertAdjacentHTML("beforeend",'<button id="mo">⚙️ 更多</button>');
 const sec=(t,ids)=>{const h=document.createElement("h3");h.textContent=t;const g=document.createElement("div");g.className="grp";ids.forEach(i=>g.append($("#"+i)));mr.append(h,g)};
 const h0=document.createElement("h3");h0.textContent="現在是什麼時候？";mr.append(h0,$("#tg"));sec("看起來怎麼樣？",["nm","pp","tp","rs"]);sec("時間和聲音",["tm","pz","vol"]);sec("小貓探險時",["vw"]);sec("不知道怎麼玩？",["hp"]);
-$("#mo").onclick=()=>{mr.hidden=!mr.hidden};
+["fp","qb","ls","mu","mo"].forEach(id=>{const b=$("#"+id),t=b.textContent.trim().split(" ");b.innerHTML=`<i>${t.shift()}</i><span>${t.join(" ")}</span>`});
+$("#mo").onclick=()=>{mr.hidden=!mr.hidden};$("#pcl").onclick=()=>document.body.classList.add("nopanel");if(innerWidth<=760)document.body.classList.add("nopanel");
+document.addEventListener("pointerdown",e=>{if(!mr.hidden&&!e.target.closest("#more,#mo"))mr.hidden=true});
 try{if(!sessionStorage.getItem("w1"))$("#wl").hidden=false}catch(e){$("#wl").hidden=false}
 $("#wg").onclick=()=>{$("#wl").hidden=true;try{sessionStorage.setItem("w1","1")}catch(e){}}}
 // ambient sound (synthesized)
